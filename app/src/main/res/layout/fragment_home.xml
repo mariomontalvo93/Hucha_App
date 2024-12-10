@@ -23,14 +23,22 @@
 
     <EditText
         android:id="@+id/etBusqueda"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:ems="10"
+        android:layout_marginTop="15dp"
+        android:layout_marginHorizontal="16dp"
+        android:background="@drawable/estilo_boton_busqueda"
+        android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="8dp"
+        android:hint="Buscar metas..."
+        android:padding="12dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
+        android:textSize="16sp"
         android:inputType="text"
-        android:text="Name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Meta 1 -->
     <androidx.appcompat.widget.LinearLayoutCompat
