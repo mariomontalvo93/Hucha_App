@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Hucha</string>
+    <string name="title_home">Metas</string>
+    <string name="title_hucha_general">Hucha general</string>
+    <string name="title_ajustes">Ajustes</string>
+    <string name="iniciar_sesion">Iniciar sesión</string>
+    <string name="email">Email</string>
+    <string name="password">Contraseña</string>
+    <string name="IniciarSesionGoogle">Iniciar sesión con google</string>
+    <string name="nocuenta">¿No tienes cuenta? Creala ahora</string>
+    <string name="crear_cuenta">Crear cuenta</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_crear_meta">Crear meta</string>
+    <string name="title_detalles_meta">Detalles meta</string>
+    <string name="nombre">Nombre</string>
+    <string name="apellidos">Apellidos</string>
+    <string name="acuerdo_terminos">Estoy de acuerdo con los términos y condiciones de uso</string>
+    <string name="cantidad">Cantidad</string>
+    <string name="cantidad_inicial">Cantidad inicial</string>
+</resources>

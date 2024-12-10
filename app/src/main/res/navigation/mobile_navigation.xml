@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.example.hucha.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_detalles_meta"
+            app:destination="@id/navigation_detalles_meta" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_crear_meta"
+            app:destination="@id/navigation_crear_meta" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_hucha_general"
+        android:name="com.example.hucha.ui.huchaGeneral.HuchaGeneralFragment"
+        android:label="@string/title_hucha_general"
+        tools:layout="@layout/fragment_hucha_general" />
+
+    <fragment
+        android:id="@+id/navigation_ajustes"
+        android:name="com.example.hucha.ui.ajustes.AjustesFragment"
+        android:label="@string/title_ajustes"
+        tools:layout="@layout/fragment_ajustes" />
+
+    <fragment
+        android:id="@+id/navigation_crear_meta"
+        android:name="com.example.hucha.ui.CrearMetaFragment"
+        android:label="@string/title_crear_meta"
+        tools:layout="@layout/fragment_crear_meta" />
+
+    <fragment
+        android:id="@+id/navigation_detalles_meta"
+        android:name="com.example.hucha.ui.DetallesMetaFragment"
+        android:label="@string/title_detalles_meta"
+        tools:layout="@layout/fragment_detalles_meta" />
+</navigation>

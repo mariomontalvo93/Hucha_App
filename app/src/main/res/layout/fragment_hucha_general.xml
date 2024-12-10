@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/fondo"
+    tools:context=".ui.huchaGeneral.HuchaGeneralFragment">
+
+    <ImageView
+        android:id="@+id/ivHuchaGeneral"
+        android:layout_width="168dp"
+        android:layout_height="131dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/tvEjemplo2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Metas alcanzadas: 6"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivHuchaGeneral"
+        android:layout_marginTop="40dp"/>
+    <TextView
+        android:id="@+id/tvEjemplo3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Metas pendientes: 3"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvEjemplo2"
+        android:layout_marginTop="40dp"/>
+    <TextView
+        android:id="@+id/tvEjemplo4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Este mes has ahorrado: 300€"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvEjemplo3"
+        android:layout_marginTop="40dp"/>
+
+    <TextView
+        android:id="@+id/tvProgresoEjemplo2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:text="Progreso : 60%"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvEjemplo4"
+        android:layout_marginTop="40dp"/>
+
+    <ProgressBar
+        android:id="@+id/pEjemplo2"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminateOnly="false"
+        android:max="100"
+        android:progress="75"
+        android:layout_marginTop="10dp"
+        android:progressTint="@color/teal_200"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvProgresoEjemplo2" />
+
+    <TextView
+        android:id="@+id/tvEjemplo5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Llevas 2500€ ahorrados para tus metas."
+        android:textSize="24sp"
+        android:paddingRight="40dp"
+        android:paddingLeft="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pEjemplo2"
+        android:layout_marginTop="40dp"/>
+
+    <TextView
+        android:id="@+id/tvEjemplo6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingRight="40dp"
+        android:paddingLeft="40dp"
+        android:text="El total de dinero de tus metas es de: 6000€"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvEjemplo5" />
+</androidx.constraintlayout.widget.ConstraintLayout>
