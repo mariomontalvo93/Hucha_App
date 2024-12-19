@@ -1,2 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_name">Piggy Bank</string>
+    <string name="title_home">Goals</string>
+    <string name="title_hucha_general">General Piggy Bank</string>
+    <string name="title_ajustes">Settigns</string>
+    <string name="iniciar_sesion">Log in</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="IniciarSesionGoogle">Log in with google</string>
+    <string name="nocuenta">¿No tienes cuenta? Creala ahora</string>
+    <string name="crear_cuenta">Crear cuenta</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_crear_meta">Crear meta</string>
+    <string name="title_detalles_meta">Detalles meta</string>
+    <string name="nombre">Nombre</string>
+    <string name="apellidos">Apellidos</string>
+    <string name="acuerdo_terminos">Estoy de acuerdo con los términos y condiciones de uso</string>
+    <string name="cantidad">Cantidad</string>
+    <string name="cantidad_inicial">Cantidad inicial</string>
+    <string name="registrarme">Sign in</string>
+</resources>
