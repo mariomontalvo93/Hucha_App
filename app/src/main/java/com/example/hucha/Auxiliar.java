@@ -1,78 +1,41 @@
 package com.example.hucha;
 
 import android.content.Context;
-import android.widget.Toast;
 
-import com.example.hucha.modelo.Usuario;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
 
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import com.example.hucha.BBDD.AppDataBase;
+
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 
 import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 
 public class Auxiliar {
 
-    private static String fileName = "Usuarios.dat";
+    private static AppDataBase appDataBase = null;
 
-    public static boolean registrarUsuario(Usuario usuario, Context context) throws IOException, ClassNotFoundException {
-        ArrayList<Usuario> usuarios = obtenerDatosUsuarios(context);
-        for(Usuario u :usuarios){
-            if(u.getEmail().equals(usuario.getEmail())){
-                return false;
-            }
+    public static AppDataBase getAppDataBaseInstance(Context context)
+    {
+        if(appDataBase == null)
+        {
+            appDataBase = Room.databaseBuilder(context, AppDataBase.class, "HuchaApp").build();
         }
-        File f = new File(context.getFilesDir(), fileName);
 
-        FileOutputStream fOs = new FileOutputStream(f,true);
-        ObjectOutputStream oOs = new ObjectOutputStream(fOs);
-        oOs.writeObject(usuario);
-        oOs.close();
-        return true;
+        return appDataBase;
     }
 
-    public static ArrayList<Usuario> obtenerDatosUsuarios(Context context) throws IOException, ClassNotFoundException {
-        ArrayList<Usuario>usuarios= new ArrayList<>();
-        File f = new File(context.getFilesDir(), fileName);
-        if(f.exists()) {
-            FileInputStream fI = new FileInputStream(f);
-            ObjectInputStream oIs = new ObjectInputStream(fI);
-            try {
-                while (true) {
-                    usuarios.add((Usuario) oIs.readObject());
-                }
-            } catch (EOFException e) {
-
-            }
-            oIs.close();
-        }else{
-            f.createNewFile();
-        }
-
-        return usuarios;
-    }
-
-
-    public static boolean iniciarSesionUsuario(String usuario, String contrasenha, Context context) throws IOException, ClassNotFoundException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-
-        ArrayList<Usuario> usuarios = obtenerDatosUsuarios(context);
-        for(Usuario u :usuarios){
-            String usus = u.getEmail();
-            if(u.getEmail().equals(usuario)){
-                return u.getContrasenha().equals(Usuario.encriptarContrasenha(usuario, contrasenha));
-
-            }
-        }
-        return false;
+    public static String encriptarContrasenha(String usuario, String contrasenha) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        String usuarioPadded = String.format("%-16s", usuario).substring(0, 16);
+        Key key = new SecretKeySpec(usuarioPadded.getBytes(),"AES");
+        Cipher c = Cipher.getInstance("AES");
+        c.init(Cipher.ENCRYPT_MODE,key);
+        return new String (c.doFinal(contrasenha.getBytes()));
     }
 }

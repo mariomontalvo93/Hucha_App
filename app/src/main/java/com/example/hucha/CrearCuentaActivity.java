@@ -6,15 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
+import com.example.hucha.BBDD.Modelo.Usuario;
 import com.example.hucha.databinding.ActivityCrearCuentaBinding;
-import com.example.hucha.databinding.ActivityLoginBinding;
-import com.example.hucha.modelo.Usuario;
 
 public class CrearCuentaActivity extends AppCompatActivity {
 
@@ -28,28 +23,49 @@ public class CrearCuentaActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         context=this;
 
-        binding.btnCreacionCuenta.setOnClickListener(new View.OnClickListener()
-        {
+        binding.btnCreacionCuenta.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                try {
-                    Usuario u = new Usuario(binding.etNombre.getText().toString(), binding.etApellidos.getText().toString(),binding.etEmailCrearCuenta.getText().toString(),Usuario.encriptarContrasenha(binding.etEmailCrearCuenta.getText().toString(), binding.etPasswordCrearCuenta.getText().toString()));
-                    if(Auxiliar.registrarUsuario(u,context)){
-                        goToPantallaPrincipal(v);
-                    } else {
-                        Toast.makeText(context,"El usuario ya existe.",Toast.LENGTH_LONG).show();
+            public void onClick(View v) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Usuario u = new Usuario(binding.etNombre.getText().toString(), binding.etApellidos.getText().toString(), binding.etEmailCrearCuenta.getText().toString(), Auxiliar.encriptarContrasenha(binding.etEmailCrearCuenta.getText().toString(), binding.etPasswordCrearCuenta.getText().toString()));
+                            if (Auxiliar.getAppDataBaseInstance(context).usuarioDao().insertUsuario(u) != -1) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(context, "El usuario se ha creado correctamente.", Toast.LENGTH_LONG).show();
+                                        goToPantallaLogin(v);
+                                    }
+                                });
+
+                            } else {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(context, "Ha habido un error al intentar crear el usuario.", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
+                        } catch (Exception e) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(context, "Ha ocurrido un error al registrarse. Inténtelo más tarde.", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
+
                     }
-                }catch(Exception e){
-                    Toast.makeText(context,"Ha ocurrido un error al registrarse. Inténtelo más tarde.",Toast.LENGTH_LONG).show();
-                }
+                }).start();
             }
         });
     }
 
-    public void goToPantallaPrincipal(View v)
+    public void goToPantallaLogin(View v)
     {
-        Intent intent = new Intent(CrearCuentaActivity.this, MainActivity.class);
+        Intent intent = new Intent(CrearCuentaActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
