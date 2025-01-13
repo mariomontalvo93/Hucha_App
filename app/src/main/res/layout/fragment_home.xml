@@ -40,55 +40,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Meta 1 -->
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/llDetalles"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvMetas"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingBottom="16dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etBusqueda"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp">
+        app:layout_constraintTop_toBottomOf="@+id/etBusqueda" />
 
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            app:srcCompat="@drawable/iconomotocicleta" />
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="HAYABUSA 1300"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Progreso 15.000/20.000€"
-                android:textSize="14sp" />
-
-            <ProgressBar
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:indeterminateOnly="false"
-                android:max="100"
-                android:progress="75"
-                android:progressTint="@color/teal_200" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    <!-- Meta 1 -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,65 +22,75 @@
         android:id="@+id/tvCrearCuenta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:fontFamily="sans-serif"
         android:text="@string/crear_cuenta"
-        android:textSize="24sp"
+        android:textColor="@color/black"
+        android:textSize="40sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivCrearCuenta"
-        android:layout_marginTop="50dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/ivCrearCuenta" />
 
     <EditText
         android:id="@+id/etNombre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:backgroundTint="@color/black"
         android:ems="10"
-        android:inputType="text"
         android:hint="@string/nombre"
+        android:inputType="text"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCrearCuenta"
-        android:layout_marginTop="40dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/tvCrearCuenta" />
 
     <EditText
         android:id="@+id/etApellidos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/black"
         android:ems="10"
-        android:inputType="text"
         android:hint="@string/apellidos"
+        android:inputType="text"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etNombre"
-        android:layout_marginTop="20dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/etNombre" />
 
     <EditText
         android:id="@+id/etEmailCrearCuenta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/black"
         android:ems="10"
-        android:inputType="text"
         android:hint="@string/email"
+        android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etApellidos"
-        android:layout_marginTop="20dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/etApellidos" />
 
     <EditText
         android:id="@+id/etPasswordCrearCuenta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/black"
         android:ems="10"
         android:hint="@string/password"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etEmailCrearCuenta"
-        android:layout_marginTop="20dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/etEmailCrearCuenta" />
 
     <Button
         android:id="@+id/btnCreacionCuenta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
         android:text="@string/crear_cuenta"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
