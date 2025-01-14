@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -66,11 +67,13 @@ public class HomeFragment extends Fragment implements MetaAdapter.OnClickItem {
         bm.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
         byte[] bytes = outputStream.toByteArray();
 
-        metas.add(new Meta("Meta1", 20, 20, "FFFFF", false, bytes, -1, false));
-        metas.add(new Meta("Meta2", 30, 30, "FFFFF", false, bytes, -1, false));
-        metas.add(new Meta("Meta3", 40, 40, "FFFFF", false, bytes, -1, false));
-        metas.add(new Meta("Meta4", 50, 50, "FFFFF", false, bytes, -1, false));
-        metas.add(new Meta("Meta5", 60, 60, "FFFFF", false, bytes, -1, false));
+        metas.add(new Meta("Meta1", 20, 100, "#ffaa9c", false, bytes, -1, false));
+        metas.add(new Meta("Meta2", 30, 100, "#f8ff9c", false, bytes, -1, false));
+        metas.add(new Meta("Meta3", 40, 100, "#b0ff9c", false, bytes, -1, false));
+        metas.add(new Meta("Meta4", 50, 100, "#51c3be", false, bytes, -1, false));
+        metas.add(new Meta("Meta5", 60, 100, "#517cc3", false, bytes, -1, false));
+        metas.add(new Meta("Meta6", 70, 100, "#ba51c3", false, bytes, -1, false));
+        metas.add(new Meta("Meta7", 80, 100, "#c351a0", false, bytes, -1, false));
 
         return metas;
     }
@@ -98,6 +101,8 @@ public class HomeFragment extends Fragment implements MetaAdapter.OnClickItem {
 
     @Override
     public void onClickItem(int position) {
-        Navigation.findNavController(binding.getRoot()).navigate(R.id.action_navigation_home_to_navigation_detalles_meta);
+        HomeFragmentDirections.ActionNavigationHomeToNavigationDetallesMeta action = HomeFragmentDirections.actionNavigationHomeToNavigationDetallesMeta(metasList.get(position));
+
+        Navigation.findNavController(binding.getRoot()).navigate(action);
     }
 }

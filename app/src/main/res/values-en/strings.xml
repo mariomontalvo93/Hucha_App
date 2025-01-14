@@ -25,4 +25,5 @@
     <string name="eliminar_cuenta">Delete account</string>
     <string name="exportar_datos">Export data</string>
     <string name="sobre_nosotros">About us</string>
+    <string name="progreso">Progreso</string>
 </resources>

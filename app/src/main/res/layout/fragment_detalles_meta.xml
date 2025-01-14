@@ -2,75 +2,28 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fondo"
     tools:context=".ui.DetallesMetaFragment">
 
-    <ImageView
-        android:id="@+id/ivMoto"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/iconomotocicleta" />
-
-    <TextView
-        android:id="@+id/tvTituloMeta"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="55dp"
-        android:text="HAYABUSA 1300"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/ivMoto"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <TextView
-        android:id="@+id/tvProgreso"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:text="Progreso : 300€/500€"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivMoto" />
-
-    <ProgressBar
-        android:id="@+id/pbProgresoMetaDetalles"
-        style="?android:attr/progressBarStyleHorizontal"
+    <LinearLayout
+        android:id="@+id/datos_cabecera_detalles"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:indeterminateOnly="false"
-        android:max="100"
-        android:progress="75"
-        android:layout_marginTop="20dp"
-        android:progressTint="@color/teal_200"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvProgreso" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="10dp"/>
 
-    <TextView
-        android:id="@+id/tvEjemplo1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:text="1 -> +300€\n\n2 -> -100€\n\n3 -> +500€\n\n4 -> -300€"
-        android:textSize="34sp"
-        android:textStyle="bold"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_trasacciones_detalles"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pbProgresoMetaDetalles" />
-
+        app:layout_constraintTop_toBottomOf="@+id/datos_cabecera_detalles" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

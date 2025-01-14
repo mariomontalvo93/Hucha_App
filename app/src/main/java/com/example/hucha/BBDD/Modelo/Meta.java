@@ -2,10 +2,11 @@ package com.example.hucha.BBDD.Modelo;
 
 import androidx.room.Entity;
 
+import java.io.Serializable;
 import java.sql.Blob;
 
 @Entity
-public class Meta {
+public class Meta implements Serializable {
     public int id;
 
     public String nombre;

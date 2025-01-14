@@ -24,4 +24,5 @@
     <string name="eliminar_cuenta">Eliminar cuenta</string>
     <string name="exportar_datos">Exportar datos</string>
     <string name="sobre_nosotros">Sobre nosotros</string>
+    <string name="progreso">Progreso</string>
 </resources>

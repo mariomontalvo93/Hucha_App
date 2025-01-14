@@ -11,11 +11,11 @@
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_navigation_home_to_navigation_detalles_meta"
-            app:destination="@id/navigation_detalles_meta" />
-        <action
             android:id="@+id/action_navigation_home_to_navigation_crear_meta"
             app:destination="@id/navigation_crear_meta" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_detalles_meta"
+            app:destination="@id/navigation_detalles_meta" />
     </fragment>
 
     <fragment
@@ -40,5 +40,9 @@
         android:id="@+id/navigation_detalles_meta"
         android:name="com.example.hucha.ui.DetallesMetaFragment"
         android:label="@string/title_detalles_meta"
-        tools:layout="@layout/fragment_detalles_meta" />
+        tools:layout="@layout/fragment_detalles_meta" >
+        <argument
+            android:name="meta"
+            app:argType="com.example.hucha.BBDD.Modelo.Meta" />
+    </fragment>
 </navigation>
