@@ -36,7 +36,8 @@ public class MetaAdapter extends RecyclerView.Adapter<MetaAdapter.ViewHolder> {
         public TextView tvTitle;
         public TextView tvCantidad;
 
-        public ImageView ivImagen;
+        public ImageView ivDelete;
+        public ImageView ivEdit;
 
         public OnClickItem onClickItem;
 
@@ -45,10 +46,11 @@ public class MetaAdapter extends RecyclerView.Adapter<MetaAdapter.ViewHolder> {
         public ViewHolder(View itemView, OnClickItem clickItem) {
             super(itemView);
 
-            tvTitle = (TextView) itemView.findViewById(R.id.tvTitleMetaItem);
-            tvCantidad = (TextView) itemView.findViewById(R.id.tvAmountItem);
-            ivImagen = (ImageView) itemView.findViewById(R.id.ivMetaItem);
-            cl = (ConstraintLayout) itemView.findViewById(R.id.cvMetaItem);
+            tvTitle = itemView.findViewById(R.id.tvTitleMetaItem);
+            tvCantidad = itemView.findViewById(R.id.tvAmountItem);
+            ivDelete = itemView.findViewById(R.id.btnActionDeleteMetaItem);
+            ivEdit = itemView.findViewById(R.id.btnActionEditMetaItem);
+            cl = itemView.findViewById(R.id.cvMetaItem);
 
             onClickItem = clickItem;
 
@@ -78,9 +80,26 @@ public class MetaAdapter extends RecyclerView.Adapter<MetaAdapter.ViewHolder> {
         holder.tvTitle.setText(meta.nombre);
         holder.tvCantidad.setText(meta.dineroActual + "€/" + meta.dineroObjetivo );
 
+        holder.ivDelete.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                holder.onClickItem.onClickDelete();
+            }
+        });
+
+        holder.ivEdit.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                holder.onClickItem.onClickEdit();
+            }
+        });
+
         Bitmap bm = BitmapFactory.decodeByteArray(meta.icono, 0 ,meta.icono.length);
 
-        holder.ivImagen.setImageBitmap(bm);
         holder.cl.setBackgroundColor(Color.parseColor(meta.color));
     }
 
@@ -92,5 +111,7 @@ public class MetaAdapter extends RecyclerView.Adapter<MetaAdapter.ViewHolder> {
 
     public interface OnClickItem {
         void onClickItem(int position);
+        void onClickDelete();
+        void onClickEdit();
     }
 }

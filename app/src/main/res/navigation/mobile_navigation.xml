@@ -34,7 +34,12 @@
         android:id="@+id/navigation_crear_meta"
         android:name="com.example.hucha.ui.CrearMetaFragment"
         android:label="@string/title_crear_meta"
-        tools:layout="@layout/fragment_crear_meta" />
+        tools:layout="@layout/fragment_crear_meta" >
+        <argument
+            android:name="meta"
+            app:argType="com.example.hucha.BBDD.Modelo.Meta"
+            app:nullable="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_detalles_meta"
@@ -44,5 +49,8 @@
         <argument
             android:name="meta"
             app:argType="com.example.hucha.BBDD.Modelo.Meta" />
+        <action
+            android:id="@+id/action_navigation_detalles_meta_to_navigation_crear_meta"
+            app:destination="@id/navigation_crear_meta" />
     </fragment>
 </navigation>

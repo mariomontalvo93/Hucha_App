@@ -7,13 +7,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -53,7 +49,40 @@ public class HomeFragment extends Fragment implements MetaAdapter.OnClickItem {
 
         initRecyclerView();
 
+        // Escucha el resultado desde FragmentCrearMeta
+        getParentFragmentManager().setFragmentResultListener("crearMeta", this, (requestKey, result) -> {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                Meta meta = (Meta) result.getSerializable("meta", Meta.class);
+                anadirMeta(meta);
+            }
+        });
+
+        getParentFragmentManager().setFragmentResultListener("eliminarMeta", this, (requestKey, result) -> {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                int idMeta = result.getInt("idMeta");
+                eliminarMeta(idMeta);
+            }
+        });
+
         return root;
+    }
+
+    private void anadirMeta(Meta meta)
+    {
+        metasList.add(meta);
+        adapter.notifyDataSetChanged();
+    }
+
+    private void eliminarMeta(int idMeta)
+    {
+        for(int i=0; i<metasList.size();i++)
+        {
+            if(metasList.get(i).id == idMeta)
+            {
+                metasList.remove(i);
+                break;
+            }
+        }
     }
 
     private List<Meta> datosMetasPrueba()
@@ -90,7 +119,9 @@ public class HomeFragment extends Fragment implements MetaAdapter.OnClickItem {
     }
 
     public void goToCreationFragment(View view){
-        Navigation.findNavController(view).navigate(R.id.action_navigation_home_to_navigation_crear_meta);
+        HomeFragmentDirections.ActionNavigationHomeToNavigationCrearMeta action = HomeFragmentDirections.actionNavigationHomeToNavigationCrearMeta(null);
+
+        Navigation.findNavController(binding.getRoot()).navigate(action);
     }
 
     @Override
@@ -104,5 +135,15 @@ public class HomeFragment extends Fragment implements MetaAdapter.OnClickItem {
         HomeFragmentDirections.ActionNavigationHomeToNavigationDetallesMeta action = HomeFragmentDirections.actionNavigationHomeToNavigationDetallesMeta(metasList.get(position));
 
         Navigation.findNavController(binding.getRoot()).navigate(action);
+    }
+
+    @Override
+    public void onClickDelete() {
+
+    }
+
+    @Override
+    public void onClickEdit() {
+
     }
 }

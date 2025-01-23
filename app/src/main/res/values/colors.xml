@@ -10,4 +10,6 @@
     <color name="colorInicio">#9C27B0</color>
     <color name="colorFin">#E91E63</color>
     <color name="colorTarjetaMeta">#71B44E</color>
+    <color name="colorIngreso">#86E05B</color>
+    <color name="colorRetirada">#BF5454</color>
 </resources>

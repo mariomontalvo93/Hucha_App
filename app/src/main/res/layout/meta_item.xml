@@ -26,19 +26,31 @@
             android:textColor="@color/white"
             android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/ivDeleteMetaItem"
+            app:layout_constraintEnd_toStartOf="@+id/btnActionEditMetaItem"
             app:layout_constraintStart_toEndOf="@+id/ivMetaItem"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/ivDeleteMetaItem"
+            android:id="@+id/btnActionDeleteMetaItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
             android:layout_marginTop="15dp"
+            android:layout_marginEnd="10dp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@android:drawable/ic_menu_delete" />
+
+        <ImageView
+            android:id="@+id/btnActionEditMetaItem"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="5dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="@+id/btnActionDeleteMetaItem"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_edit" />
 
         <TextView
             android:id="@+id/tvProgressItem"
