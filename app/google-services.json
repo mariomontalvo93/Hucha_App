@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "646291813216",
+    "project_id": "hucha-449107",
+    "storage_bucket": "hucha-449107.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:646291813216:android:50e5e3d58f19af74bd2405",
+        "android_client_info": {
+          "package_name": "com.example.hucha"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "646291813216-6ll1mma2l3k52vc9ks4isena2gspbfcd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hucha",
+            "certificate_hash": "34ca50986a37c0fae4fa1ac845469acc96d73467"
+          }
+        },
+        {
+          "client_id": "646291813216-88mlptltu6086risai1h5j8mf98khlro.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKUOQKLhe1x-IfAgJpJUSH_pVgAxgDEdo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "646291813216-88mlptltu6086risai1h5j8mf98khlro.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

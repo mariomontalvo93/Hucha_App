@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -42,6 +43,7 @@ public class MetaAdapter extends RecyclerView.Adapter<MetaAdapter.ViewHolder> {
         public OnClickItem onClickItem;
 
         public ConstraintLayout cl;
+        public ProgressBar pb;
 
         public ViewHolder(View itemView, OnClickItem clickItem) {
             super(itemView);
@@ -51,6 +53,7 @@ public class MetaAdapter extends RecyclerView.Adapter<MetaAdapter.ViewHolder> {
             ivDelete = itemView.findViewById(R.id.btnActionDeleteMetaItem);
             ivEdit = itemView.findViewById(R.id.btnActionEditMetaItem);
             cl = itemView.findViewById(R.id.cvMetaItem);
+            pb = itemView.findViewById(R.id.pbMetaItem);
 
             onClickItem = clickItem;
 
@@ -77,30 +80,16 @@ public class MetaAdapter extends RecyclerView.Adapter<MetaAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Meta meta = metasList.get(position);
 
-        holder.tvTitle.setText(meta.nombre);
+        holder.tvTitle.setText(meta.id + " " + meta.nombre);
         holder.tvCantidad.setText(meta.dineroActual + "€/" + meta.dineroObjetivo );
-
-        holder.ivDelete.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                holder.onClickItem.onClickDelete();
-            }
-        });
-
-        holder.ivEdit.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                holder.onClickItem.onClickEdit();
-            }
-        });
 
         Bitmap bm = BitmapFactory.decodeByteArray(meta.icono, 0 ,meta.icono.length);
 
         holder.cl.setBackgroundColor(Color.parseColor(meta.color));
+
+        holder.pb.setMax(Math.round(meta.dineroObjetivo));
+        holder.pb.setProgress(Math.round(meta.dineroActual));
+        holder.pb.setMin(0);
     }
 
     @Override
@@ -111,7 +100,5 @@ public class MetaAdapter extends RecyclerView.Adapter<MetaAdapter.ViewHolder> {
 
     public interface OnClickItem {
         void onClickItem(int position);
-        void onClickDelete();
-        void onClickEdit();
     }
 }

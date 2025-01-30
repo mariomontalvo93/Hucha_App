@@ -51,17 +51,13 @@ public class HomeFragment extends Fragment implements MetaAdapter.OnClickItem {
 
         // Escucha el resultado desde FragmentCrearMeta
         getParentFragmentManager().setFragmentResultListener("crearMeta", this, (requestKey, result) -> {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                Meta meta = (Meta) result.getSerializable("meta", Meta.class);
-                anadirMeta(meta);
-            }
+            Meta meta = (Meta) result.getSerializable("meta");
+            anadirMeta(meta);
         });
 
         getParentFragmentManager().setFragmentResultListener("eliminarMeta", this, (requestKey, result) -> {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                int idMeta = result.getInt("idMeta");
-                eliminarMeta(idMeta);
-            }
+            int idMeta = result.getInt("idMeta");
+            eliminarMeta(idMeta);
         });
 
         return root;
@@ -83,6 +79,7 @@ public class HomeFragment extends Fragment implements MetaAdapter.OnClickItem {
                 break;
             }
         }
+        adapter.notifyDataSetChanged();
     }
 
     private List<Meta> datosMetasPrueba()
@@ -96,13 +93,13 @@ public class HomeFragment extends Fragment implements MetaAdapter.OnClickItem {
         bm.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
         byte[] bytes = outputStream.toByteArray();
 
-        metas.add(new Meta("Meta1", 20, 100, "#ffaa9c", false, bytes, -1, false));
-        metas.add(new Meta("Meta2", 30, 100, "#f8ff9c", false, bytes, -1, false));
-        metas.add(new Meta("Meta3", 40, 100, "#b0ff9c", false, bytes, -1, false));
-        metas.add(new Meta("Meta4", 50, 100, "#51c3be", false, bytes, -1, false));
-        metas.add(new Meta("Meta5", 60, 100, "#517cc3", false, bytes, -1, false));
-        metas.add(new Meta("Meta6", 70, 100, "#ba51c3", false, bytes, -1, false));
-        metas.add(new Meta("Meta7", 80, 100, "#c351a0", false, bytes, -1, false));
+        metas.add(new Meta("Meta1", 100, 20, "#ffaa9c", false, bytes, -1, false));
+        metas.add(new Meta("Meta2", 100, 30, "#FFC000", false, bytes, -1, false));
+        metas.add(new Meta("Meta3", 100, 40, "#b0ff9c", false, bytes, -1, false));
+        metas.add(new Meta("Meta4", 100, 50, "#51c3be", false, bytes, -1, false));
+        metas.add(new Meta("Meta5", 100, 60, "#517cc3", false, bytes, -1, false));
+        metas.add(new Meta("Meta6", 100, 70, "#ba51c3", false, bytes, -1, false));
+        metas.add(new Meta("Meta7", 100, 80, "#c351a0", false, bytes, -1, false));
 
         return metas;
     }
@@ -135,15 +132,5 @@ public class HomeFragment extends Fragment implements MetaAdapter.OnClickItem {
         HomeFragmentDirections.ActionNavigationHomeToNavigationDetallesMeta action = HomeFragmentDirections.actionNavigationHomeToNavigationDetallesMeta(metasList.get(position));
 
         Navigation.findNavController(binding.getRoot()).navigate(action);
-    }
-
-    @Override
-    public void onClickDelete() {
-
-    }
-
-    @Override
-    public void onClickEdit() {
-
     }
 }

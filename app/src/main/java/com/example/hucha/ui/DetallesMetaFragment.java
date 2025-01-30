@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class DetallesMetaFragment extends Fragment implements MetaAdapter.OnClickItem{
+public class DetallesMetaFragment extends Fragment{
     private Meta meta;
     FragmentDetallesMetaBinding binding;
 
@@ -70,6 +71,7 @@ public class DetallesMetaFragment extends Fragment implements MetaAdapter.OnClic
         ImageView ivDelete = cabecera.findViewById(R.id.btnActionDeleteMetaItem);
         ImageView ivEdit = cabecera.findViewById(R.id.btnActionEditMetaItem);
         ConstraintLayout cl = cabecera.findViewById(R.id.cvMetaItem);
+        ProgressBar pb = cabecera.findViewById(R.id.pbMetaItem);
 
         tvTitle.setText(meta.nombre);
         tvCantidad.setText(meta.dineroActual + "€/" + meta.dineroObjetivo );
@@ -77,6 +79,11 @@ public class DetallesMetaFragment extends Fragment implements MetaAdapter.OnClic
         Bitmap bm = BitmapFactory.decodeByteArray(meta.icono, 0 ,meta.icono.length);
 
         ivImagen.setImageBitmap(bm);
+        ivDelete.setOnClickListener(v -> onClickDelete());
+        ivEdit.setOnClickListener(v -> onClickEdit());
+
+        pb.setMax(Math.round(meta.dineroObjetivo));
+        pb.setProgress(Math.round(meta.dineroActual));
 
         ivDelete.setVisibility(View.VISIBLE);
         ivEdit.setVisibility(View.VISIBLE);
@@ -107,10 +114,8 @@ public class DetallesMetaFragment extends Fragment implements MetaAdapter.OnClic
         });
 
         getParentFragmentManager().setFragmentResultListener("editarMeta", this, (requestKey, result) -> {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                Meta meta = (Meta) result.getSerializable("meta", Meta.class);
-                editMeta(meta);
-            }
+            Meta meta = (Meta) result.getSerializable("meta");
+            editMeta(meta);
         });
 
         return root;
@@ -191,11 +196,6 @@ public class DetallesMetaFragment extends Fragment implements MetaAdapter.OnClic
         return transaccions;
     }
 
-    @Override
-    public void onClickItem(int position) {
-    }
-
-    @Override
     public void onClickDelete() {
         new AlertDialog.Builder(requireContext())
                 .setTitle(getResources().getString(R.string.title_eliminar_meta))
@@ -214,7 +214,6 @@ public class DetallesMetaFragment extends Fragment implements MetaAdapter.OnClic
                 .show();
     }
 
-    @Override
     public void onClickEdit() {
         DetallesMetaFragmentDirections.ActionNavigationDetallesMetaToNavigationCrearMeta action = DetallesMetaFragmentDirections.actionNavigationDetallesMetaToNavigationCrearMeta(meta);
 

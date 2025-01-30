@@ -1,7 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     id 'androidx.navigation.safeargs'
+    id 'com.google.gms.google-services'
 }
+apply plugin: 'com.google.gms.google-services'
 
 android {
     namespace 'com.example.hucha'
@@ -33,6 +35,9 @@ android {
 }
 
 dependencies {
+    implementation("com.google.firebase:firebase-auth:22.1.0")
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
+
     def room_version = "2.6.1"
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
@@ -50,5 +55,4 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
-
 }

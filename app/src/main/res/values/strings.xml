@@ -42,4 +42,5 @@
     <string name="faltan_campos_rellenar">Faltan campos por rellenar</string>
     <string name="rellenar_campo_cantidad_inicial">Debe rellenar la cantidad inicial</string>
     <string name="rellenar_campo_cantidad_objetivo">Debe rellenar el campo cantidad objetivo</string>
+    <string name="default_web_client">646291813216-88mlptltu6086risai1h5j8mf98khlro.apps.googleusercontent.com</string>
 </resources>
