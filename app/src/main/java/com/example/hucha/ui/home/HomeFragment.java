@@ -1,5 +1,7 @@
 package com.example.hucha.ui.home;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -7,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -14,7 +17,9 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hucha.Auxiliar;
 import com.example.hucha.BBDD.Modelo.Meta;
+import com.example.hucha.BBDD.Modelo.Usuario;
 import com.example.hucha.R;
 import com.example.hucha.adapter.MetaAdapter;
 import com.example.hucha.databinding.FragmentHomeBinding;
@@ -28,6 +33,7 @@ public class HomeFragment extends Fragment implements MetaAdapter.OnClickItem {
     private FragmentHomeBinding binding;
 
     private List<Meta> metasList;
+    private Context context;
 
     private MetaAdapter adapter;
 
@@ -45,7 +51,9 @@ public class HomeFragment extends Fragment implements MetaAdapter.OnClickItem {
             }
         });
 
-        if(metasList == null) metasList = datosMetasPrueba();
+        context = getContext();
+
+        if(metasList==null) obtenerMetas();
 
         initRecyclerView();
 
@@ -82,26 +90,54 @@ public class HomeFragment extends Fragment implements MetaAdapter.OnClickItem {
         adapter.notifyDataSetChanged();
     }
 
-    private List<Meta> datosMetasPrueba()
-    {
-        List<Meta> metas =
-                new ArrayList<>();
-        Drawable dw= getResources().getDrawable(R.drawable.iconomotocicleta);
-        Bitmap bm = ((BitmapDrawable) dw).getBitmap();
+    private void obtenerMetas(){
+        metasList = new ArrayList<>();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    SharedPreferences sharedPreferences = Auxiliar.getPreferenciasCompartidas(context);
+                    String usuario = sharedPreferences.getString("usuario", "");
+                    List<Meta> metas = Auxiliar.getAppDataBaseInstance(context).metaDao().getMetasByUsuarioId(usuario);
 
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-        byte[] bytes = outputStream.toByteArray();
+                    if(metas != null)
+                    {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (metas.size() == 0) {
+                                    binding.tvNoHayMetasHome.setVisibility(View.VISIBLE);
+                                } else {
+                                    binding.tvNoHayMetasHome.setVisibility(View.GONE);
+                                    metasList.clear();
 
-        metas.add(new Meta("Meta1", 100, 20, "#ffaa9c", false, bytes, -1, false));
-        metas.add(new Meta("Meta2", 100, 30, "#FFC000", false, bytes, -1, false));
-        metas.add(new Meta("Meta3", 100, 40, "#b0ff9c", false, bytes, -1, false));
-        metas.add(new Meta("Meta4", 100, 50, "#51c3be", false, bytes, -1, false));
-        metas.add(new Meta("Meta5", 100, 60, "#517cc3", false, bytes, -1, false));
-        metas.add(new Meta("Meta6", 100, 70, "#ba51c3", false, bytes, -1, false));
-        metas.add(new Meta("Meta7", 100, 80, "#c351a0", false, bytes, -1, false));
-
-        return metas;
+                                    for(Meta meta : metas)
+                                    {
+                                        metasList.add(meta);
+                                    }
+                                    adapter.notifyDataSetChanged();
+                                }
+                            }
+                        });
+                    }else{
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                binding.tvNoHayMetasHome.setVisibility(View.VISIBLE);
+                                Toast.makeText(context,"No se han podido obtener las metas",Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                }catch(Exception e){
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context,"Ha ocurrido un error al obtener las metas. Inténtelo más tarde.",Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            }
+        }).start();
     }
 
     private void initRecyclerView()

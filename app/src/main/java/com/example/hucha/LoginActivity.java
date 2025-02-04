@@ -2,6 +2,7 @@ package com.example.hucha;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,8 +17,6 @@ import androidx.core.content.ContextCompat;
 
 import com.example.hucha.BBDD.Modelo.Usuario;
 import com.example.hucha.databinding.ActivityLoginBinding;
-import com.google.android.gms.auth.api.identity.BeginSignInRequest;
-import com.google.android.gms.auth.api.identity.SignInCredential;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -26,23 +25,35 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-import java.util.UUID;
-
-import kotlinx.coroutines.CoroutineScope;
+import com.google.android.gms.auth.api.identity.BeginSignInRequest;
+import com.google.android.gms.auth.api.identity.SignInClient;
+import com.google.android.gms.auth.api.identity.SignInCredential;
+import com.google.android.gms.auth.api.identity.SignInPassword;
+import com.google.android.gms.auth.api.identity.Identity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
     Context context;
+    View actualView;
 
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
-    private static final int RC_SIGN_IN = 9001;
+
+    private SignInClient oneTapClient;
+    private BeginSignInRequest signInRequest;
+    private static final int REQ_ONE_TAP = 123;
+    private boolean showOneTapUI = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +61,21 @@ public class LoginActivity extends AppCompatActivity {
 
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        actualView = binding.getRoot();
         context=this;
+
         mAuth = FirebaseAuth.getInstance();
+        oneTapClient = Identity.getSignInClient(this);
+
+        signInRequest = new BeginSignInRequest.Builder()
+                .setGoogleIdTokenRequestOptions(
+                        BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                                .setSupported(true)
+                                .setServerClientId(getString(R.string.default_web_client_id))
+                                .setFilterByAuthorizedAccounts(false)
+                                .build())
+                .setAutoSelectEnabled(true)
+                .build();
 
         binding.btnCrearCuenta.setOnClickListener(new View.OnClickListener()
         {
@@ -78,6 +102,10 @@ public class LoginActivity extends AppCompatActivity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
+                                        SharedPreferences sharedPreferences = Auxiliar.getPreferenciasCompartidas(context);
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        editor.putString("usuario", String.valueOf(usuarioObtenido.id));
+                                        editor.apply();
                                         goToPantallaPrincipal(v);
                                     }
                                 });
@@ -118,6 +146,14 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        SharedPreferences sharedPreferences = Auxiliar.getPreferenciasCompartidas(context);
+        String usuario = sharedPreferences.getString("usuario", null);
+
+        if(usuario != null)
+        {
+            goToPantallaPrincipal(actualView);
+        }
+
         checkAndRequestPermissions();
     }
 
@@ -156,40 +192,57 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void inicioSesionGoogle() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        oneTapClient.beginSignIn(signInRequest)
+                .addOnSuccessListener(this, result -> {
+                    try {
+                        startIntentSenderForResult(result.getPendingIntent().getIntentSender(),
+                                REQ_ONE_TAP, null, 0, 0, 0);
+                    } catch (Exception e) {
+                        Log.e("OneTapSignIn", "Error lanzando One Tap", e);
+                    }
+                })
+                .addOnFailureListener(this, e -> {
+                    Log.e("OneTapSignIn", "No se pudo iniciar sesión", e);
+                    Toast.makeText(this, "No se pudo iniciar sesión", Toast.LENGTH_SHORT).show();
+                });
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+        if (requestCode == REQ_ONE_TAP) {
             try {
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseAuthWithGoogle(account);
-            } catch (ApiException e) {
-                Log.w("Google Sign In", "Google sign in failed", e);
-                Toast.makeText(this, "Error al iniciar sesión", Toast.LENGTH_SHORT).show();
+                SignInCredential credential = oneTapClient.getSignInCredentialFromIntent(data);
+                String idToken = credential.getGoogleIdToken();
+
+                if (idToken != null) {
+                    firebaseAuthWithGoogle(idToken);
+                } else {
+                    Toast.makeText(this, "Error: No se recibió ID Token", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Log.e("OneTapSignIn", "Error en el resultado de One Tap", e);
             }
         }
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<com.google.firebase.auth.AuthResult>() {
-            @Override
-            public void onComplete(Task<com.google.firebase.auth.AuthResult> task) {
-                if (task.isSuccessful()) {
-                    FirebaseUser user = mAuth.getCurrentUser();
-                    Toast.makeText(context,user.getEmail(),Toast.LENGTH_LONG);
-                } else {
-                    Log.w("Firebase Auth", "signInWithCredential:failure", task.getException());
-                }
-            }
-        });
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        SharedPreferences sharedPreferences = Auxiliar.getPreferenciasCompartidas(context);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        assert user != null;
+                        editor.putString("usuario", String.valueOf(user.getUid()));
+                        editor.apply();
+                        goToPantallaPrincipal(actualView);
+                    } else {
+                        Log.e("FirebaseAuth", "Error en autenticación", task.getException());
+                    }
+                });
     }
     
 

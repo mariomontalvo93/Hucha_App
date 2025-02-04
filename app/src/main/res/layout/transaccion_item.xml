@@ -33,10 +33,21 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:text="1 de enero 2025 13:30"
+            android:layout_marginTop="10dp"
             android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/ivTipoTransaccion"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvConceptoTransaccion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="10dp"
+            android:text="Sin concepto"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ivTipoTransaccion" />
 
         <TextView
             android:id="@+id/tvImporteTransaccion"

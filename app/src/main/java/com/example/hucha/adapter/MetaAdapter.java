@@ -80,7 +80,7 @@ public class MetaAdapter extends RecyclerView.Adapter<MetaAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Meta meta = metasList.get(position);
 
-        holder.tvTitle.setText(meta.id + " " + meta.nombre);
+        holder.tvTitle.setText(meta.nombre);
         holder.tvCantidad.setText(meta.dineroActual + "€/" + meta.dineroObjetivo );
 
         Bitmap bm = BitmapFactory.decodeByteArray(meta.icono, 0 ,meta.icono.length);

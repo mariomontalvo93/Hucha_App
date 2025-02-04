@@ -1,6 +1,7 @@
 package com.example.hucha;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
@@ -25,7 +26,7 @@ public class Auxiliar {
     {
         if(appDataBase == null)
         {
-            appDataBase = Room.databaseBuilder(context, AppDataBase.class, "HuchaApp").build();
+            appDataBase = Room.databaseBuilder(context, AppDataBase.class, "HuchaApp").fallbackToDestructiveMigration().build();
         }
 
         return appDataBase;
@@ -37,5 +38,10 @@ public class Auxiliar {
         Cipher c = Cipher.getInstance("AES");
         c.init(Cipher.ENCRYPT_MODE,key);
         return new String (c.doFinal(contrasenha.getBytes()));
+    }
+
+    public static SharedPreferences getPreferenciasCompartidas(Context context)
+    {
+        return context.getSharedPreferences("user_preferences",Context.MODE_PRIVATE);
     }
 }

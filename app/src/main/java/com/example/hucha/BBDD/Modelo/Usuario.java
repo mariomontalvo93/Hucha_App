@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 @Entity
 public class Usuario {
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    public long id;
 
     @ColumnInfo(name = "nombre")
     @NotNull

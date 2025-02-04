@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -146,23 +147,35 @@ public class DetallesMetaFragment extends Fragment{
         input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         input.setHint(getResources().getString(R.string.introducir_cantidad));
 
+        final EditText inputConcepto = new EditText(getActivity());
+        inputConcepto.setInputType(InputType.TYPE_CLASS_TEXT);
+        inputConcepto.setHint(getResources().getString(R.string.introducir_concepto));
+
+
+        LinearLayout layout = new LinearLayout(getActivity());
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(50, 20, 50, 20);
+        layout.addView(input);
+        layout.addView(inputConcepto);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getResources().getString(R.string.anadir_transaccion));
-        if(tipoTransaccion==1)
-        {
+
+        if (tipoTransaccion == 1) {
             builder.setMessage(getResources().getString(R.string.introducir_abono));
-        }else{
+        } else {
             builder.setMessage(getResources().getString(R.string.introducir_retirada));
         }
 
-        builder.setView(input);
+        builder.setView(layout);
+
 
         builder.setPositiveButton(getResources().getString(R.string.aceptar), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String amount = input.getText().toString();
                 if (!amount.isEmpty()) {
-                    Transaccion tran = new Transaccion(meta.id, tipoTransaccion,Float.parseFloat(amount),new Date());
+                    Transaccion tran = new Transaccion(meta.id, tipoTransaccion,Float.parseFloat(amount),System.currentTimeMillis(), inputConcepto.getText().toString());
                     transaccionesList.add(tran);
                     adapter.notifyDataSetChanged();
                 } else {
@@ -187,11 +200,11 @@ public class DetallesMetaFragment extends Fragment{
         List<Transaccion> transaccions =
                 new ArrayList<>();
 
-        transaccions.add(new Transaccion(1, 1, 100, new Date(1734780001200L)));
+    /*transaccions.add(new Transaccion(1, 1, 100, new Date(1734780001200L)));
         transaccions.add(new Transaccion(1, 2, 50, new Date(1734680035000L)));
         transaccions.add(new Transaccion(1, 1, 200, new Date(1734980000000L)));
         transaccions.add(new Transaccion(1, 2, 500, new Date(1734480002800L)));
-        transaccions.add(new Transaccion(1, 1, 140, new Date(1734280012000L)));
+        transaccions.add(new Transaccion(1, 1, 140, new Date(1734280012000L)));*/
 
         return transaccions;
     }
@@ -203,7 +216,7 @@ public class DetallesMetaFragment extends Fragment{
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton(getResources().getString(R.string.eliminar), (dialog, which) -> {
                     Bundle result = new Bundle();
-                    result.putInt("idMeta", meta.id);
+                    result.putLong("idMeta", meta.id);
 
                     getParentFragmentManager().setFragmentResult("eliminarMeta", result);
                     requireActivity().getSupportFragmentManager().popBackStack();

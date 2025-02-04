@@ -2,6 +2,7 @@ package com.example.hucha;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -31,10 +32,15 @@ public class CrearCuentaActivity extends AppCompatActivity {
                     public void run() {
                         try {
                             Usuario u = new Usuario(binding.etNombre.getText().toString(), binding.etApellidos.getText().toString(), binding.etEmailCrearCuenta.getText().toString(), Auxiliar.encriptarContrasenha(binding.etEmailCrearCuenta.getText().toString(), binding.etPasswordCrearCuenta.getText().toString()));
-                            if (Auxiliar.getAppDataBaseInstance(context).usuarioDao().insertUsuario(u) != -1) {
+                            long usuario = Auxiliar.getAppDataBaseInstance(context).usuarioDao().insertUsuario(u);
+                            if (usuario != -1) {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
+                                        SharedPreferences sharedPreferences = Auxiliar.getPreferenciasCompartidas(context);
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        editor.putString("usuario", String.valueOf(usuario));
+                                        editor.apply();
                                         Toast.makeText(context, "El usuario se ha creado correctamente.", Toast.LENGTH_LONG).show();
                                         goToPantallaLogin(v);
                                     }

@@ -38,7 +38,7 @@ public class TransaccionAdapter  extends RecyclerView.Adapter<TransaccionAdapter
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView tvFecha;
+        public TextView tvFecha, tvConcepto;
         public TextView tvCantidad;
 
         public ImageView ivImagen;
@@ -47,6 +47,7 @@ public class TransaccionAdapter  extends RecyclerView.Adapter<TransaccionAdapter
             super(itemView);
 
             tvFecha = (TextView) itemView.findViewById(R.id.tvFechaTransaccion);
+            tvConcepto = (TextView) itemView.findViewById(R.id.tvConceptoTransaccion);
             tvCantidad = (TextView) itemView.findViewById(R.id.tvImporteTransaccion);
             ivImagen = (ImageView) itemView.findViewById(R.id.ivTipoTransaccion);
 
@@ -69,7 +70,7 @@ public class TransaccionAdapter  extends RecyclerView.Adapter<TransaccionAdapter
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Transaccion tran = transaccionList.get(position);
 
-        Instant instant = tran.fecha.toInstant();
+        Instant instant = Instant.ofEpochMilli(tran.fecha);
         LocalDateTime localDateTime = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd 'de' MMMM 'del' yyyy HH:mm", new Locale("es", "ES"));
@@ -78,7 +79,15 @@ public class TransaccionAdapter  extends RecyclerView.Adapter<TransaccionAdapter
 
         holder.tvFecha.setText(formattedDate);
 
+
         Context context = holder.itemView.getContext();
+
+        if( tran.concepto.isEmpty())
+        {
+            holder.tvConcepto.setText(context.getString(R.string.sin_concepto));
+        }else{
+            holder.tvConcepto.setText(tran.concepto);
+        }
 
         if(tran.tipoTransaccion == 1)
         {
