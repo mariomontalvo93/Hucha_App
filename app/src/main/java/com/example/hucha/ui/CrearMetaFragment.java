@@ -120,35 +120,14 @@ public class CrearMetaFragment extends Fragment {
             meta.dineroActual = Float.parseFloat(binding.etCantidadInicialMeta.getText().toString());
             meta.dineroObjetivo = Float.parseFloat(binding.etCantidadCrearMeta.getText().toString());
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Auxiliar.getAppDataBaseInstance(getContext()).metaDao().updateMeta(meta);
+            Bundle result = new Bundle();
+            result.putSerializable("meta", meta);
 
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Bundle result = new Bundle();
-                                result.putSerializable("meta", meta);
-
-                                getParentFragmentManager().setFragmentResult("editarMeta", result);
-                                requireActivity().getSupportFragmentManager().popBackStack();
-                            }
-                        });
-                    }catch(Exception e){
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(getContext(),"Ha ocurrido un error al añadir la meta. Inténtelo más tarde.",Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
-                }
-            }).start();
+            getParentFragmentManager().setFragmentResult("editarMeta", result);
+            requireActivity().getSupportFragmentManager().popBackStack();
 
         }else{
-            Drawable dw= getResources().getDrawable(R.drawable.iconomotocicleta);
+            Drawable dw= getResources().getDrawable(R.drawable.cerdito);
             Bitmap bm = ((BitmapDrawable) dw).getBitmap();
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

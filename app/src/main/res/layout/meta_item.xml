@@ -86,7 +86,7 @@
             android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/iconomotocicleta" />
+            app:srcCompat="@drawable/cerdito" />
 
         <ProgressBar
             android:id="@+id/pbMetaItem"

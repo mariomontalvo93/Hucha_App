@@ -53,7 +53,13 @@ public class HomeFragment extends Fragment implements MetaAdapter.OnClickItem {
 
         context = getContext();
 
-        if(metasList==null) obtenerMetas();
+        //if(metasList==null) {
+            obtenerMetas();
+        /*}else{
+            if (metasList.size() == 0) {
+                binding.tvNoHayMetasHome.setVisibility(View.VISIBLE);
+            }
+        }*/
 
         initRecyclerView();
 
@@ -64,8 +70,8 @@ public class HomeFragment extends Fragment implements MetaAdapter.OnClickItem {
         });
 
         getParentFragmentManager().setFragmentResultListener("eliminarMeta", this, (requestKey, result) -> {
-            int idMeta = result.getInt("idMeta");
-            eliminarMeta(idMeta);
+            Meta meta = (Meta) result.getSerializable("meta");
+            eliminarMeta(meta);
         });
 
         return root;
@@ -77,17 +83,43 @@ public class HomeFragment extends Fragment implements MetaAdapter.OnClickItem {
         adapter.notifyDataSetChanged();
     }
 
-    private void eliminarMeta(int idMeta)
+    private void eliminarMeta(Meta meta)
     {
-        for(int i=0; i<metasList.size();i++)
-        {
-            if(metasList.get(i).id == idMeta)
-            {
-                metasList.remove(i);
-                break;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Auxiliar.getAppDataBaseInstance(context).metaDao().deleteMeta(meta);
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for(int i=0; i<metasList.size();i++)
+                            {
+                                if(metasList.get(i).id == meta.id)
+                                {
+                                    metasList.remove(i);
+                                    break;
+                                }
+                            }
+
+                            if (metasList.size() == 0) {
+                                binding.tvNoHayMetasHome.setVisibility(View.VISIBLE);
+                            }
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+
+                }catch(Exception e){
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context,"Ha ocurrido un error al eliminar la meta. Intentelo más tarde.",Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
             }
-        }
-        adapter.notifyDataSetChanged();
+        }).start();
     }
 
     private void obtenerMetas(){

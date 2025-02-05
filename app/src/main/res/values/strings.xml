@@ -49,4 +49,8 @@
     <string name="no_metas">No hay metas disponibles.\nPulse el botón para añadir una nueva meta</string>
     <string name="sin_concepto">Sin concepto</string>
     <string name="introducir_concepto">Introduzca el concepto</string>
+    <string name="precio_meta">Precio meta</string>
+    <string name="no_transacciones">No se ha añadido ninguna transacción.</string>
+    <string name="cantidad_actual">Cantidad actual</string>
+    <string name="aviso_cerrar_sesion">¿Está seguro que desea cerrar sesión?</string>
 </resources>

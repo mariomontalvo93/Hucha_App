@@ -1,6 +1,8 @@
 package com.example.hucha.ui;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -26,6 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.hucha.Auxiliar;
 import com.example.hucha.BBDD.Modelo.Meta;
 import com.example.hucha.BBDD.Modelo.Transaccion;
 import com.example.hucha.R;
@@ -48,6 +51,11 @@ public class DetallesMetaFragment extends Fragment{
 
     List<Transaccion> transaccionesList;
 
+    TextView tvTitle, tvCantidad;
+    ImageView ivImagen;
+    ConstraintLayout cl;
+    ProgressBar pb;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,34 +74,24 @@ public class DetallesMetaFragment extends Fragment{
 
         View cabecera = inflater.inflate(R.layout.meta_item, binding.datosCabeceraDetalles, false);
 
-        TextView tvTitle = cabecera.findViewById(R.id.tvTitleMetaItem);
-        TextView tvCantidad = cabecera.findViewById(R.id.tvAmountItem);
-        ImageView ivImagen = cabecera.findViewById(R.id.ivMetaItem);
+        tvTitle = cabecera.findViewById(R.id.tvTitleMetaItem);
+        tvCantidad = cabecera.findViewById(R.id.tvAmountItem);
+         ivImagen = cabecera.findViewById(R.id.ivMetaItem);
         ImageView ivDelete = cabecera.findViewById(R.id.btnActionDeleteMetaItem);
         ImageView ivEdit = cabecera.findViewById(R.id.btnActionEditMetaItem);
-        ConstraintLayout cl = cabecera.findViewById(R.id.cvMetaItem);
-        ProgressBar pb = cabecera.findViewById(R.id.pbMetaItem);
+        cl = cabecera.findViewById(R.id.cvMetaItem);
+        pb = cabecera.findViewById(R.id.pbMetaItem);
 
-        tvTitle.setText(meta.nombre);
-        tvCantidad.setText(meta.dineroActual + "€/" + meta.dineroObjetivo );
-
-        Bitmap bm = BitmapFactory.decodeByteArray(meta.icono, 0 ,meta.icono.length);
-
-        ivImagen.setImageBitmap(bm);
-        ivDelete.setOnClickListener(v -> onClickDelete());
-        ivEdit.setOnClickListener(v -> onClickEdit());
-
-        pb.setMax(Math.round(meta.dineroObjetivo));
-        pb.setProgress(Math.round(meta.dineroActual));
+        chargeMeta();
 
         ivDelete.setVisibility(View.VISIBLE);
         ivEdit.setVisibility(View.VISIBLE);
-
-        cl.setBackgroundColor(Color.parseColor(meta.color));
+        ivDelete.setOnClickListener(v -> onClickDelete());
+        ivEdit.setOnClickListener(v -> onClickEdit());
 
         binding.datosCabeceraDetalles.addView(cabecera);
 
-        if(transaccionesList == null) transaccionesList = datosTransaccionesPrueba();
+        if(transaccionesList == null) obtenerTransacciones();
         initRecyclerView();
 
         binding.btnAnadirIngreso.setOnClickListener(new View.OnClickListener()
@@ -115,18 +113,57 @@ public class DetallesMetaFragment extends Fragment{
         });
 
         getParentFragmentManager().setFragmentResultListener("editarMeta", this, (requestKey, result) -> {
-            Meta meta = (Meta) result.getSerializable("meta");
-            editMeta(meta);
+            Meta metaParam = (Meta) result.getSerializable("meta");
+            editMeta(metaParam);
         });
 
         return root;
     }
 
+    private void chargeMeta()
+    {
+        tvTitle.setText(meta.nombre);
+        tvCantidad.setText(meta.dineroActual + "€/" + meta.dineroObjetivo );
+
+        Bitmap bm = BitmapFactory.decodeByteArray(meta.icono, 0 ,meta.icono.length);
+
+        ivImagen.setImageBitmap(bm);
+
+        pb.setMax(Math.round(meta.dineroObjetivo));
+        pb.setProgress(Math.round(meta.dineroActual));
+
+        cl.setBackgroundColor(Color.parseColor(meta.color));
+    }
+
     private void editMeta(Meta metaParam)
     {
-        meta.nombre = metaParam.nombre;
-        meta.dineroActual = metaParam.dineroActual;
-        meta.dineroObjetivo = metaParam.dineroObjetivo;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Auxiliar.getAppDataBaseInstance(getContext()).metaDao().updateMeta(metaParam);
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            meta.nombre = metaParam.nombre;
+                            meta.dineroActual = metaParam.dineroActual;
+                            meta.dineroObjetivo = metaParam.dineroObjetivo;
+                            chargeMeta();
+                        }
+                    });
+                }catch(Exception e){
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(),"Ha ocurrido un error al añadir la meta. Inténtelo más tarde.",Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            }
+        }).start();
+
+
     }
 
     private void initRecyclerView()
@@ -176,8 +213,7 @@ public class DetallesMetaFragment extends Fragment{
                 String amount = input.getText().toString();
                 if (!amount.isEmpty()) {
                     Transaccion tran = new Transaccion(meta.id, tipoTransaccion,Float.parseFloat(amount),System.currentTimeMillis(), inputConcepto.getText().toString());
-                    transaccionesList.add(tran);
-                    adapter.notifyDataSetChanged();
+                    anadirTransaccionBBDD(tran);
                 } else {
                     Toast.makeText(getActivity(), getResources().getString(R.string.cantidad_no_introducida), Toast.LENGTH_SHORT).show();
                 }
@@ -195,18 +231,90 @@ public class DetallesMetaFragment extends Fragment{
         builder.show();
     }
 
-    private List<Transaccion> datosTransaccionesPrueba()
+    private void anadirTransaccionBBDD(Transaccion tran)
     {
-        List<Transaccion> transaccions =
-                new ArrayList<>();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    long id = Auxiliar.getAppDataBaseInstance(getContext()).transaccionDao().inserTransaccion(tran);
+                    tran.id = id;
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            transaccionesList.add(tran);
+                            adapter.notifyDataSetChanged();
+                            binding.tvNoHayTransaccionesDetalles.setVisibility(View.GONE);
 
-    /*transaccions.add(new Transaccion(1, 1, 100, new Date(1734780001200L)));
-        transaccions.add(new Transaccion(1, 2, 50, new Date(1734680035000L)));
-        transaccions.add(new Transaccion(1, 1, 200, new Date(1734980000000L)));
-        transaccions.add(new Transaccion(1, 2, 500, new Date(1734480002800L)));
-        transaccions.add(new Transaccion(1, 1, 140, new Date(1734280012000L)));*/
+                            Meta metaAux = meta;
+                            if(tran.tipoTransaccion == 1)
+                            {
+                                metaAux.dineroActual += tran.cantidad;
+                            }else{
+                                metaAux.dineroActual -= tran.cantidad;
+                            }
+                            editMeta(metaAux);
+                        }
+                    });
+                }catch(Exception e){
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(),"Ha ocurrido un error al añadir la transacción. Inténtelo más tarde.",Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
 
-        return transaccions;
+    private void obtenerTransacciones()
+    {
+        transaccionesList = new ArrayList<>();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    List<Transaccion> transacciones = Auxiliar.getAppDataBaseInstance(getContext()).transaccionDao().getTransaccionMetaId(meta.id);
+
+                    if(transacciones != null)
+                    {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (transacciones.size() == 0) {
+                                    binding.tvNoHayTransaccionesDetalles.setVisibility(View.VISIBLE);
+                                } else {
+                                    binding.tvNoHayTransaccionesDetalles.setVisibility(View.GONE);
+                                    transaccionesList.clear();
+
+                                    for(Transaccion transaccion : transacciones)
+                                    {
+                                        transaccionesList.add(transaccion);
+                                    }
+                                    adapter.notifyDataSetChanged();
+                                }
+                            }
+                        });
+                    }else{
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                binding.tvNoHayTransaccionesDetalles.setVisibility(View.VISIBLE);
+                                Toast.makeText(getContext(),"No se han podido obtener las transacciones",Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                }catch(Exception e){
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(),"Ha ocurrido un error al obtener las transacciones. Inténtelo más tarde.",Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            }
+        }).start();
     }
 
     public void onClickDelete() {
@@ -216,7 +324,7 @@ public class DetallesMetaFragment extends Fragment{
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton(getResources().getString(R.string.eliminar), (dialog, which) -> {
                     Bundle result = new Bundle();
-                    result.putLong("idMeta", meta.id);
+                    result.putSerializable("meta", meta);
 
                     getParentFragmentManager().setFragmentResult("eliminarMeta", result);
                     requireActivity().getSupportFragmentManager().popBackStack();

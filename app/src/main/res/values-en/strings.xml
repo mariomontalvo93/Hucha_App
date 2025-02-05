@@ -44,10 +44,14 @@
     <string name="rellenar_campo_cantidad_inicial">You must fill in the initial amount</string>
     <string name="rellenar_campo_cantidad_objetivo">You must fill in the target quantity field</string>
     <string name="default_web_client">646291813216-88mlptltu6086risai1h5j8mf98khlro.apps.googleusercontent.com</string>
-    <string name="cerrar_sesion">Cerrar Sesión</string>
-    <string name="cierre_sesion_correcto">Se ha cerrado sesión correctamente</string>
-    <string name="anadir_meta">Añadir meta</string>
-    <string name="no_metas">No hay metas disponibles.\nPulse el botón para añadir una nueva meta</string>
-    <string name="sin_concepto">Sin concepto</string>
-    <string name="introducir_concepto">Introduzca el concepto</string>
+    <string name="cerrar_sesion">Sign out</string>
+    <string name="cierre_sesion_correcto">Logged out successfully</string>
+    <string name="anadir_meta">Add goal</string>
+    <string name="no_metas">No goals available.\nPress the button to add a new goal</string>
+    <string name="sin_concepto">No concept</string>
+    <string name="introducir_concepto">Enter the concept</string>
+    <string name="precio_meta">Precio meta</string>
+    <string name="no_transacciones">No se ha añadido ninguna transacción.</string>
+    <string name="cantidad_actual">Cantidad actual</string>
+    <string name="aviso_cerrar_sesion">¿Está seguro que desea cerrar sesión?</string>
 </resources>
