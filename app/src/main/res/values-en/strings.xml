@@ -54,4 +54,10 @@
     <string name="no_transacciones">No se ha añadido ninguna transacción.</string>
     <string name="cantidad_actual">Cantidad actual</string>
     <string name="aviso_cerrar_sesion">¿Está seguro que desea cerrar sesión?</string>
+    <string name="metas_alcanzadas">Metas alcanzadas:</string>
+    <string name="metas_pendientes">Metas pendientes:</string>
+    <string name="ahorro_mensual">Este mes has ahorrado:</string>
+    <string name="progreso_total">Progreso total:</string>
+    <string name="ahorro_general">Llevas <b>%d€</b> ahorrados para tus metas.</string>
+    <string name="total_hucha_general"><![CDATA[El total de dinero de tus metas es <b>%d€</b>]]></string>
 </resources>

@@ -12,4 +12,5 @@
     <color name="colorTarjetaMeta">#71B44E</color>
     <color name="colorIngreso">#86E05B</color>
     <color name="colorRetirada">#BF5454</color>
+    <color name="grisClaro">#D3D3D3</color>
 </resources>
