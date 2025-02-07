@@ -44,7 +44,7 @@ public class AjustesFragment extends Fragment {
                 .setTitle(getResources().getString(R.string.cerrar_sesion))
                 .setMessage(getResources().getString(R.string.aviso_cerrar_sesion))
                 .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(getResources().getString(R.string.eliminar), (dialog, which) -> {
+                .setPositiveButton(getResources().getString(R.string.aceptar), (dialog, which) -> {
                     SharedPreferences sharedPreferences = Auxiliar.getPreferenciasCompartidas(context);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("usuario", null);

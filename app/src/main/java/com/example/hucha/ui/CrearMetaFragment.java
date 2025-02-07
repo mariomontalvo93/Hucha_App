@@ -140,7 +140,7 @@ public class CrearMetaFragment extends Fragment {
             meta = new Meta(binding.etNombreMeta.getText().toString(),
                     Float.parseFloat(binding.etCantidadCrearMeta.getText().toString()),
                     Float.parseFloat(binding.etCantidadInicialMeta.getText().toString()),
-                    "#ffaa9c", false, bytes, -1, false,usuario);
+                    "#71B44E", false, bytes, -1, false,usuario);
 
 
             new Thread(new Runnable() {
