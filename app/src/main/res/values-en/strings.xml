@@ -50,14 +50,14 @@
     <string name="no_metas">No goals available.\nPress the button to add a new goal</string>
     <string name="sin_concepto">No concept</string>
     <string name="introducir_concepto">Enter the concept</string>
-    <string name="precio_meta">Precio meta</string>
-    <string name="no_transacciones">No se ha añadido ninguna transacción.</string>
-    <string name="cantidad_actual">Cantidad actual</string>
-    <string name="aviso_cerrar_sesion">¿Está seguro que desea cerrar sesión?</string>
-    <string name="metas_alcanzadas">Metas alcanzadas:</string>
-    <string name="metas_pendientes">Metas pendientes:</string>
-    <string name="ahorro_mensual">Este mes has ahorrado:</string>
-    <string name="progreso_total">Progreso total:</string>
-    <string name="ahorro_general">Llevas <b>%d€</b> ahorrados para tus metas.</string>
-    <string name="total_hucha_general"><![CDATA[El total de dinero de tus metas es <b>%d€</b>]]></string>
+    <string name="precio_meta">Goal price</string>
+    <string name="no_transacciones">No transaction added</string>
+    <string name="cantidad_actual">Current amount</string>
+    <string name="aviso_cerrar_sesion">Are you sure you want to log out?</string>
+    <string name="metas_alcanzadas">Goals achieved:</string>
+    <string name="metas_pendientes">Pending goals:</string>
+    <string name="ahorro_mensual">This month you have saved:</string>
+    <string name="progreso_total">Total progress:</string>
+    <string name="ahorro_general"><![CDATA[You have <b>%d€</b> saved for your goals.]]></string>
+    <string name="total_hucha_general"><![CDATA[The total money for your goals is <b>%d€</b>]]></string>
 </resources>
