@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.hucha.Auxiliar;
 import com.example.hucha.LoginActivity;
-import com.example.hucha.MainActivity;
 import com.example.hucha.R;
 import com.example.hucha.databinding.FragmentAjustesBinding;
 
@@ -34,6 +33,8 @@ public class AjustesFragment extends Fragment {
 
         binding.btnCerrarSesion.setOnClickListener(v -> cerrarSesion(v));
         binding.ivContacto.setOnClickListener(v -> telefonoContacto());
+        binding.ivTwitter.setOnClickListener(v -> abrirX());
+        binding.ivEmail.setOnClickListener(v -> contactarViaEmail());
 
         return root;
     }
@@ -69,6 +70,31 @@ public class AjustesFragment extends Fragment {
         startActivity(intent);
     }
 
+    private void abrirX()
+    {
+        String url = "https://x.com/";
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
+    }
+
+    private void contactarViaEmail()
+    {
+        Intent emailSelectorIntent = new Intent(Intent.ACTION_SENDTO);
+        emailSelectorIntent.setData(Uri.parse("mailto:"));
+
+        SharedPreferences sharedPreferences = Auxiliar.getPreferenciasCompartidas(getContext());
+        String usuario = sharedPreferences.getString("usuario", "");
+
+        final Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"huchaSoporte@gmail.com"});
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "UsuarioId: "+ usuario);
+        emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        emailIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        emailIntent.setSelector( emailSelectorIntent );
+
+        startActivity(emailIntent);
+    }
 
     @Override
     public void onDestroyView() {

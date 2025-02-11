@@ -63,7 +63,13 @@ public class HuchaGeneralFragment extends Fragment {
                             }
 
                             binding.tvAhorroMensual.setText(getActivity().getString(R.string.ahorro_mensual) + " " + dineroAhorradoMensual);
-                            binding.tvProgresoHuchaGeneral.setText(getActivity().getString(R.string.progreso_total) + " "+ (Integer)(dineroAhorrado*100/dineroTotal) + "%");
+                            if(dineroTotal != 0)
+                            {
+                                binding.tvProgresoHuchaGeneral.setText(getActivity().getString(R.string.progreso_total) + " "+ (Integer)(dineroAhorrado*100/dineroTotal) + "%");
+                            }else{
+                                binding.tvProgresoHuchaGeneral.setText("0%");
+                            }
+
 
                             String ahorroHuchaGeneral = getActivity().getString(R.string.ahorro_general, dineroAhorrado);
                             String totalHuchaGeneral = getActivity().getString(R.string.total_hucha_general, dineroTotal);

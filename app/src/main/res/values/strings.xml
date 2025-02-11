@@ -59,4 +59,10 @@
     <string name="progreso_total">Progreso total:</string>
     <string name="ahorro_general"><![CDATA[Llevas <b>%d€</b> ahorrados para tus metas.]]></string>
     <string name="total_hucha_general"><![CDATA[El total de dinero de tus metas es <b>%d€</b>]]></string>
+    <string name="email_erroneo">El email introducido no tiene el formato correcto.</string>
+    <string name="password_mas_8_caracteres">La contraseña debe contener más de 8 caracteres.</string>
+    <string name="password_contener_numero">La contraseña debe contener un número.</string>
+    <string name="password_minuscula_mayuscula">La contraseña debe contener al menos una mayúscula y una minúscula.</string>
+    <string name="password_caracter_especial">La contraseña debe contener un caracter especial.</string>
+    <string name="error_crear_cuenta">Error crear cuenta</string>
 </resources>
