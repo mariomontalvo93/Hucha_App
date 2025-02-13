@@ -40,7 +40,7 @@
     <string name="aviso_eliminar">Va a eliminar una meta, ¿está seguro?</string>
     <string name="rellenar_campo_nombre">Debe rellenar el campo nombre</string>
     <string name="faltan_campos_rellenar">Faltan campos por rellenar</string>
-    <string name="rellenar_campo_cantidad_inicial">Debe rellenar la cantidad inicial</string>
+    <string name="rellenar_campo_cantidad_inicial">Debe rellenar el precio de la meta</string>
     <string name="rellenar_campo_cantidad_objetivo">Debe rellenar el campo cantidad objetivo</string>
     <string name="default_web_client">646291813216-88mlptltu6086risai1h5j8mf98khlro.apps.googleusercontent.com</string>
     <string name="cerrar_sesion">Cerrar Sesión</string>
@@ -64,5 +64,7 @@
     <string name="password_contener_numero">La contraseña debe contener un número.</string>
     <string name="password_minuscula_mayuscula">La contraseña debe contener al menos una mayúscula y una minúscula.</string>
     <string name="password_caracter_especial">La contraseña debe contener un caracter especial.</string>
-    <string name="error_crear_cuenta">Error crear cuenta</string>
+    <string name="error_crear_cuenta">Error al crear cuenta</string>
+    <string name="eliminar_datos_correcto">Los datos se han eliminado correctamente.</string>
+    <string name="eliminar_datos_error">Ha habido un error al eliminar los datos. Inténtelo más tarde.</string>
 </resources>

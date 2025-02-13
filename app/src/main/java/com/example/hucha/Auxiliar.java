@@ -2,6 +2,8 @@ package com.example.hucha;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
@@ -30,6 +32,22 @@ public class Auxiliar {
         }
 
         return appDataBase;
+    }
+
+    public static void eliminarDatosUsuario(Context context)
+    {
+        SharedPreferences sharedPreferences = getPreferenciasCompartidas(context);
+        String usuario = sharedPreferences.getString("usuario", "");
+        getAppDataBaseInstance(context).transaccionDao().eliminarTransaccionesUsuario(usuario);
+        getAppDataBaseInstance(context).metaDao().eliminarMetasUsuario(usuario);
+    }
+
+    public static void eliminarUsuario(Context context)
+    {
+        SharedPreferences sharedPreferences = getPreferenciasCompartidas(context);
+        String usuario = sharedPreferences.getString("usuario", "");
+        eliminarDatosUsuario(context);
+        getAppDataBaseInstance(context).usuarioDao().eliminarUsuario(usuario);
     }
 
     public static String encriptarContrasenha(String usuario, String contrasenha) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {

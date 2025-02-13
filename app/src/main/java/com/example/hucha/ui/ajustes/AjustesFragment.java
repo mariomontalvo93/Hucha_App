@@ -12,12 +12,26 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.example.hucha.Auxiliar;
+import com.example.hucha.BBDD.Modelo.Meta;
+import com.example.hucha.BBDD.Modelo.Transaccion;
 import com.example.hucha.LoginActivity;
 import com.example.hucha.R;
 import com.example.hucha.databinding.FragmentAjustesBinding;
+
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.List;
 
 public class AjustesFragment extends Fragment {
 
@@ -35,8 +49,180 @@ public class AjustesFragment extends Fragment {
         binding.ivContacto.setOnClickListener(v -> telefonoContacto());
         binding.ivTwitter.setOnClickListener(v -> abrirX());
         binding.ivEmail.setOnClickListener(v -> contactarViaEmail());
+        binding.btnReiniciarDatos.setOnClickListener(v -> reiniciarDatos());
+        binding.btnEliminarCuenta.setOnClickListener(v -> reiniciarUsuario());
+        binding.btnExportarDatos.setOnClickListener(v -> exportarDatosAExcel());
 
         return root;
+    }
+
+    private void exportarDatosAExcel()
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    SharedPreferences sharedPreferences = Auxiliar.getPreferenciasCompartidas(getContext());
+                    String usuario = sharedPreferences.getString("usuario", "");
+                    List<Meta> metas = Auxiliar.getAppDataBaseInstance(getContext()).metaDao().getMetasByUsuarioId(usuario);
+                    List<Transaccion> transacciones =Auxiliar.getAppDataBaseInstance(getContext()).transaccionDao().getTransaccionPorUsuario(usuario);
+
+                    // Crear archivo Excel
+                    Workbook workbook = new XSSFWorkbook();
+
+                    // Agregar hojas
+                    createMetaSheet(workbook, metas);
+                    createTransaccionSheet(workbook, transacciones);
+
+                    // Guardar archivo
+                    File file = new File(context.getExternalFilesDir(null), "datos_room_usuario_"+usuario+".xlsx");
+                    FileOutputStream fileOut = new FileOutputStream(file);
+                    workbook.write(fileOut);
+                    fileOut.close();
+                    workbook.close();
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                File file = new File(context.getExternalFilesDir(null), "datos_room_usuario_"+usuario+".xlsx");
+                                Uri uri = FileProvider.getUriForFile(context, context.getPackageName() + ".provider", file);
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setDataAndType(uri, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                context.startActivity(Intent.createChooser(intent, "Abrir archivo Excel"));
+                            } catch (Exception e) {
+                                Toast.makeText(context, "No se pudo abrir el archivo", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+
+                }catch(Exception e){
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(),context.getString(R.string.eliminar_datos_error),Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+
+    // Método para crear la hoja "Meta"
+    private void createMetaSheet(Workbook workbook, List<Meta> metas) {
+        Sheet sheet = workbook.createSheet("Metas");
+        Row headerRow = sheet.createRow(0);
+        String[] columns = {"ID", "Nombre", "Dinero Objetivo", "Dinero Actual", "Color", "Logrado", "Icono", "Icono Genérico", "Online", "ID Usuario"};
+
+        // Crear encabezados
+        for (int i = 0; i < columns.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(columns[i]);
+        }
+
+        // Agregar datos
+        int rowNum = 1;
+        for (Meta meta : metas) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(meta.id);
+            row.createCell(1).setCellValue(meta.nombre);
+            row.createCell(2).setCellValue(meta.dineroObjetivo);
+            row.createCell(3).setCellValue(meta.dineroActual);
+            row.createCell(4).setCellValue(meta.color);
+            row.createCell(5).setCellValue(meta.logrado ? "Sí" : "No");
+            row.createCell(6).setCellValue(meta.icono != null ? "Sí" : "No");
+            row.createCell(7).setCellValue(meta.iconoGenerico);
+            row.createCell(8).setCellValue(meta.online ? "Sí" : "No");
+            row.createCell(9).setCellValue(meta.idUsuario);
+        }
+    }
+
+    // Método para crear la hoja "Transacciones"
+    private void createTransaccionSheet(Workbook workbook, List<Transaccion> transacciones) {
+        Sheet sheet = workbook.createSheet("Transacciones");
+        Row headerRow = sheet.createRow(0);
+        String[] columns = {"ID", "Meta ID", "Tipo Transacción", "Cantidad", "Concepto", "Fecha"};
+
+        // Crear encabezados
+        for (int i = 0; i < columns.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(columns[i]);
+        }
+
+        // Agregar datos
+        int rowNum = 1;
+        for (Transaccion transaccion : transacciones) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(transaccion.id);
+            row.createCell(1).setCellValue(transaccion.metaId);
+            row.createCell(2).setCellValue(transaccion.tipoTransaccion);
+            row.createCell(3).setCellValue(transaccion.cantidad);
+            row.createCell(4).setCellValue(transaccion.concepto != null ? transaccion.concepto : "");
+            row.createCell(5).setCellValue(transaccion.fecha);
+        }
+    }
+
+    private void reiniciarDatos()
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Auxiliar.eliminarDatosUsuario(getContext());
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(),context.getString(R.string.eliminar_datos_correcto),Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }catch(Exception e){
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(),context.getString(R.string.eliminar_datos_error),Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+
+    private void reiniciarUsuario()
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Auxiliar.eliminarUsuario(getContext());
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            SharedPreferences sharedPreferences = Auxiliar.getPreferenciasCompartidas(context);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("usuario", null);
+                            editor.apply();
+
+                            Toast.makeText(context,context.getString(R.string.cierre_sesion_correcto), Toast.LENGTH_LONG);
+
+                            Intent intent = new Intent(getActivity(), LoginActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                        }
+                    });
+
+                }catch(Exception e){
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(),context.getString(R.string.eliminar_datos_error),Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            }
+        }).start();
     }
 
     private void cerrarSesion(View v)

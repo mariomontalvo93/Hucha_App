@@ -41,7 +41,7 @@
     <string name="aviso_eliminar">You are going to delete a goal, are you sure?</string>
     <string name="rellenar_campo_nombre">You must fill out the name field</string>
     <string name="faltan_campos_rellenar">There are missing fields to fill out</string>
-    <string name="rellenar_campo_cantidad_inicial">You must fill in the initial amount</string>
+    <string name="rellenar_campo_cantidad_inicial">You must fill in the goal price</string>
     <string name="rellenar_campo_cantidad_objetivo">You must fill in the target quantity field</string>
     <string name="default_web_client">646291813216-88mlptltu6086risai1h5j8mf98khlro.apps.googleusercontent.com</string>
     <string name="cerrar_sesion">Sign out</string>
@@ -60,10 +60,12 @@
     <string name="progreso_total">Total progress:</string>
     <string name="ahorro_general"><![CDATA[You have <b>%d€</b> saved for your goals.]]></string>
     <string name="total_hucha_general"><![CDATA[The total money for your goals is <b>%d€</b>]]></string>
-    <string name="email_erroneo">El email introducido no tiene el formato correcto.</string>
-    <string name="password_mas_8_caracteres">La contraseña debe contener más de 8 caracteres.</string>
-    <string name="password_contener_numero">La contraseña debe contener un número.</string>
-    <string name="password_minuscula_mayuscula">La contraseña debe contener al menos una mayúscula y una minúscula.</string>
-    <string name="password_caracter_especial">La contraseña debe contener un caracter especial.</string>
-    <string name="error_crear_cuenta">Error crear cuenta</string>
+    <string name="email_erroneo">The email entered is not in the correct format</string>
+    <string name="password_mas_8_caracteres">Password must contain more than 8 characters</string>
+    <string name="password_contener_numero">Password must contain a number</string>
+    <string name="password_minuscula_mayuscula">The password must contain at least one uppercase and one lowercase letter</string>
+    <string name="password_caracter_especial">The password must contain a special character</string>
+    <string name="error_crear_cuenta">Error creating account</string>
+    <string name="eliminar_datos_correcto">Los datos se han eliminado correctamente.</string>
+    <string name="eliminar_datos_error">Ha habido un error al eliminar los datos. Inténtelo más tarde.</string>
 </resources>

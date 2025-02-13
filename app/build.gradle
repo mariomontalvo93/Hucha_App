@@ -35,6 +35,10 @@ android {
 }
 
 dependencies {
+    //Librería de terceros para exportar a excel
+    implementation 'org.apache.poi:poi:5.2.3'
+    implementation 'org.apache.poi:poi-ooxml:5.2.3'
+
     implementation("com.google.firebase:firebase-auth:22.1.0")
     implementation("com.google.android.gms:play-services-auth:21.0.0")
 

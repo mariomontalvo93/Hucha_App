@@ -35,4 +35,7 @@ public interface MetaDao {
 
     @Delete
     void deleteMeta(Meta meta);
+
+    @Query("DELETE FROM META WHERE idUsuario = :idUsuario")
+    void eliminarMetasUsuario(String idUsuario);
 }

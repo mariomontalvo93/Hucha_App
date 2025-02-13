@@ -13,4 +13,7 @@ public interface UsuarioDao {
 
     @Insert
     Long insertUsuario(Usuario usuario);
+
+    @Query("DELETE FROM USUARIO WHERE id = :idUsuario")
+    void eliminarUsuario(String idUsuario);
 }
