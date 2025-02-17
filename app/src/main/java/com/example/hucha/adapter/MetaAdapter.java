@@ -37,9 +37,7 @@ public class MetaAdapter extends RecyclerView.Adapter<MetaAdapter.ViewHolder> {
         public TextView tvTitle;
         public TextView tvCantidad;
 
-        public ImageView ivDelete;
-        public ImageView ivEdit;
-
+        public ImageView ivCompletada;
         public OnClickItem onClickItem;
 
         public ConstraintLayout cl;
@@ -50,8 +48,7 @@ public class MetaAdapter extends RecyclerView.Adapter<MetaAdapter.ViewHolder> {
 
             tvTitle = itemView.findViewById(R.id.tvTitleMetaItem);
             tvCantidad = itemView.findViewById(R.id.tvAmountItem);
-            ivDelete = itemView.findViewById(R.id.btnActionDeleteMetaItem);
-            ivEdit = itemView.findViewById(R.id.btnActionEditMetaItem);
+            ivCompletada = itemView.findViewById(R.id.ivMetaCompletadaMetaItem);
             cl = itemView.findViewById(R.id.cvMetaItem);
             pb = itemView.findViewById(R.id.pbMetaItem);
 
@@ -90,6 +87,8 @@ public class MetaAdapter extends RecyclerView.Adapter<MetaAdapter.ViewHolder> {
         holder.pb.setMax(Math.round(meta.dineroObjetivo));
         holder.pb.setProgress(Math.round(meta.dineroActual));
         holder.pb.setMin(0);
+
+        if(meta.logrado) holder.ivCompletada.setVisibility(View.VISIBLE);
     }
 
     @Override

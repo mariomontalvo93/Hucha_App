@@ -53,6 +53,8 @@
     <string name="no_transacciones">No se ha añadido ninguna transacción.</string>
     <string name="cantidad_actual">Cantidad actual</string>
     <string name="aviso_cerrar_sesion">¿Está seguro de que desea cerrar sesión?</string>
+    <string name="aviso_reiniciar_datos">¿Está seguro de que desea reiniciar sus datos? Se perderá todo el progreso y metas creadas hasta ahora</string>
+    <string name="aviso_eliminar_cuenta">¿Está seguro de que desea eliminar su cuenta? Se perderán todos los datos de la misma</string>
     <string name="metas_alcanzadas">Metas alcanzadas:</string>
     <string name="metas_pendientes">Metas pendientes:</string>
     <string name="ahorro_mensual">Este mes has ahorrado:</string>
@@ -67,4 +69,9 @@
     <string name="error_crear_cuenta">Error al crear cuenta</string>
     <string name="eliminar_datos_correcto">Los datos se han eliminado correctamente.</string>
     <string name="eliminar_datos_error">Ha habido un error al eliminar los datos. Inténtelo más tarde.</string>
+    <string name="atencion">Atención</string>
+    <string name="cantidad_superior_0">La cantidad de la meta debe ser superior a 0.</string>
+    <string name="aviso_cantidad_actual_superior">La cantidad introducida sobrepasa el valor total de la meta. Introduzca una transacción válida.</string>
+    <string name="aviso_cantidad_actual_menor_0">Con la cantidad introducida, el ahorro de la meta quedaría por debajo de 0. Introduzca una cantidad válida.</string>
+    <string name="color">Color</string>
 </resources>

@@ -113,7 +113,7 @@ public class AjustesFragment extends Fragment {
     private void createMetaSheet(Workbook workbook, List<Meta> metas) {
         Sheet sheet = workbook.createSheet("Metas");
         Row headerRow = sheet.createRow(0);
-        String[] columns = {"ID", "Nombre", "Dinero Objetivo", "Dinero Actual", "Color", "Logrado", "Icono", "Icono Genérico", "Online", "ID Usuario"};
+        String[] columns = {"ID", "Nombre", "Dinero Objetivo", "Dinero Actual", "Color", "Logrado", "ID Usuario"};
 
         // Crear encabezados
         for (int i = 0; i < columns.length; i++) {
@@ -131,10 +131,7 @@ public class AjustesFragment extends Fragment {
             row.createCell(3).setCellValue(meta.dineroActual);
             row.createCell(4).setCellValue(meta.color);
             row.createCell(5).setCellValue(meta.logrado ? "Sí" : "No");
-            row.createCell(6).setCellValue(meta.icono != null ? "Sí" : "No");
-            row.createCell(7).setCellValue(meta.iconoGenerico);
-            row.createCell(8).setCellValue(meta.online ? "Sí" : "No");
-            row.createCell(9).setCellValue(meta.idUsuario);
+            row.createCell(6).setCellValue(meta.idUsuario);
         }
     }
 
@@ -165,64 +162,84 @@ public class AjustesFragment extends Fragment {
 
     private void reiniciarDatos()
     {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Auxiliar.eliminarDatosUsuario(getContext());
+        new AlertDialog.Builder(requireContext())
+                .setTitle(getResources().getString(R.string.atencion))
+                .setMessage(getResources().getString(R.string.aviso_reiniciar_datos))
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(getResources().getString(R.string.aceptar), (dialog, which) -> {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Auxiliar.eliminarDatosUsuario(getContext());
 
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getContext(),context.getString(R.string.eliminar_datos_correcto),Toast.LENGTH_LONG).show();
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(getContext(),context.getString(R.string.eliminar_datos_correcto),Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }catch(Exception e){
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(getContext(),context.getString(R.string.eliminar_datos_error),Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
                         }
-                    });
-                }catch(Exception e){
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getContext(),context.getString(R.string.eliminar_datos_error),Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-            }
-        }).start();
+                    }).start();
+                })
+                .setNegativeButton(getResources().getString(R.string.cancelar), (dialog, which) -> {
+                    dialog.cancel();
+                })
+                .show();
     }
 
     private void reiniciarUsuario()
     {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Auxiliar.eliminarUsuario(getContext());
-
-                    getActivity().runOnUiThread(new Runnable() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle(getResources().getString(R.string.atencion))
+                .setMessage(getResources().getString(R.string.aviso_eliminar_cuenta))
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(getResources().getString(R.string.aceptar), (dialog, which) -> {
+                    new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            SharedPreferences sharedPreferences = Auxiliar.getPreferenciasCompartidas(context);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("usuario", null);
-                            editor.apply();
+                            try {
+                                Auxiliar.eliminarUsuario(getContext());
 
-                            Toast.makeText(context,context.getString(R.string.cierre_sesion_correcto), Toast.LENGTH_LONG);
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        SharedPreferences sharedPreferences = Auxiliar.getPreferenciasCompartidas(context);
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        editor.putString("usuario", null);
+                                        editor.apply();
 
-                            Intent intent = new Intent(getActivity(), LoginActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
+                                        Toast.makeText(context,context.getString(R.string.cierre_sesion_correcto), Toast.LENGTH_LONG);
+
+                                        Intent intent = new Intent(getActivity(), LoginActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
+                                    }
+                                });
+
+                            }catch(Exception e){
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(getContext(),context.getString(R.string.eliminar_datos_error),Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
                         }
-                    });
-
-                }catch(Exception e){
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getContext(),context.getString(R.string.eliminar_datos_error),Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-            }
-        }).start();
+                    }).start();
+                })
+                .setNegativeButton(getResources().getString(R.string.cancelar), (dialog, which) -> {
+                    dialog.cancel();
+                })
+                .show();
     }
 
     private void cerrarSesion(View v)
@@ -252,7 +269,7 @@ public class AjustesFragment extends Fragment {
     private void telefonoContacto()
     {
         Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:123456789")); // Reemplaza con el número deseado
+        intent.setData(Uri.parse("tel:123456789")); // Reemplazar con el número que se quiera
         startActivity(intent);
     }
 
@@ -278,7 +295,6 @@ public class AjustesFragment extends Fragment {
         emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         emailIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         emailIntent.setSelector( emailSelectorIntent );
-
         startActivity(emailIntent);
     }
 

@@ -2,6 +2,7 @@ package com.example.hucha.ui;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -31,6 +32,7 @@ import android.widget.Toast;
 import com.example.hucha.Auxiliar;
 import com.example.hucha.BBDD.Modelo.Meta;
 import com.example.hucha.BBDD.Modelo.Transaccion;
+import com.example.hucha.LoginActivity;
 import com.example.hucha.R;
 import com.example.hucha.adapter.MetaAdapter;
 import com.example.hucha.adapter.TransaccionAdapter;
@@ -53,13 +55,13 @@ public class DetallesMetaFragment extends Fragment{
 
     TextView tvTitle, tvCantidad;
     ImageView ivImagen;
+    ImageView ivDelete, ivEdit, ivCompletada;
     ConstraintLayout cl;
     ProgressBar pb;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -76,16 +78,17 @@ public class DetallesMetaFragment extends Fragment{
 
         tvTitle = cabecera.findViewById(R.id.tvTitleMetaItem);
         tvCantidad = cabecera.findViewById(R.id.tvAmountItem);
-         ivImagen = cabecera.findViewById(R.id.ivMetaItem);
-        ImageView ivDelete = cabecera.findViewById(R.id.btnActionDeleteMetaItem);
-        ImageView ivEdit = cabecera.findViewById(R.id.btnActionEditMetaItem);
+        ivImagen = cabecera.findViewById(R.id.ivMetaItem);
+        ivDelete = cabecera.findViewById(R.id.btnActionDeleteMetaItem);
+        ivEdit = cabecera.findViewById(R.id.btnActionEditMetaItem);
+        ivCompletada = cabecera.findViewById(R.id.ivMetaCompletadaMetaItem);
         cl = cabecera.findViewById(R.id.cvMetaItem);
         pb = cabecera.findViewById(R.id.pbMetaItem);
 
         chargeMeta();
 
-        ivDelete.setVisibility(View.VISIBLE);
-        ivEdit.setVisibility(View.VISIBLE);
+        comprobarMetaCompletada();
+
         ivDelete.setOnClickListener(v -> onClickDelete());
         ivEdit.setOnClickListener(v -> onClickEdit());
 
@@ -118,6 +121,21 @@ public class DetallesMetaFragment extends Fragment{
         });
 
         return root;
+    }
+
+    private void comprobarMetaCompletada()
+    {
+        if(meta.logrado)
+        {
+            ivDelete.setVisibility(View.GONE);
+            ivEdit.setVisibility(View.GONE);
+            ivCompletada.setVisibility(View.VISIBLE);
+            binding.btnAnadirRetirada.setVisibility(View.GONE);
+            binding.btnAnadirIngreso.setVisibility(View.GONE);
+        }else{
+            ivDelete.setVisibility(View.VISIBLE);
+            ivEdit.setVisibility(View.VISIBLE);
+        }
     }
 
     private void chargeMeta()
@@ -212,8 +230,31 @@ public class DetallesMetaFragment extends Fragment{
             public void onClick(DialogInterface dialog, int which) {
                 String amount = input.getText().toString();
                 if (!amount.isEmpty()) {
-                    Transaccion tran = new Transaccion(meta.id, tipoTransaccion,Float.parseFloat(amount),System.currentTimeMillis(), inputConcepto.getText().toString());
-                    anadirTransaccionBBDD(tran);
+                    if(comprobarTransaccionCorrecta(tipoTransaccion,  Float.parseFloat(amount)))
+                    {
+                        Transaccion tran = new Transaccion(meta.id, tipoTransaccion, Float.parseFloat(amount),System.currentTimeMillis(), inputConcepto.getText().toString());
+                        anadirTransaccionBBDD(tran);
+                    }else{
+                        if(tipoTransaccion == 1) {
+                            new AlertDialog.Builder(requireContext())
+                                    .setTitle(getResources().getString(R.string.atencion))
+                                    .setMessage(getResources().getString(R.string.aviso_cantidad_actual_superior))
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .setPositiveButton(getResources().getString(R.string.aceptar), (dialog2, which2) -> {
+                                        dialog2.cancel();
+                                    })
+                                    .show();
+                        }else{
+                            new AlertDialog.Builder(requireContext())
+                                    .setTitle(getResources().getString(R.string.atencion))
+                                    .setMessage(getResources().getString(R.string.aviso_cantidad_actual_menor_0))
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .setPositiveButton(getResources().getString(R.string.aceptar), (dialog2, which2) -> {
+                                        dialog2.cancel();
+                                    })
+                                    .show();
+                        }
+                    }
                 } else {
                     Toast.makeText(getActivity(), getResources().getString(R.string.cantidad_no_introducida), Toast.LENGTH_SHORT).show();
                 }
@@ -229,6 +270,16 @@ public class DetallesMetaFragment extends Fragment{
 
         // Mostrar el diálogo
         builder.show();
+    }
+
+    private boolean comprobarTransaccionCorrecta(int tipoTransaccion, Float cantidad)
+    {
+        if(tipoTransaccion == 1)
+        {
+            return meta.dineroObjetivo >= meta.dineroActual + cantidad;
+        }else{
+            return meta.dineroActual - cantidad >= 0;
+        }
     }
 
     private void anadirTransaccionBBDD(Transaccion tran)
@@ -253,7 +304,15 @@ public class DetallesMetaFragment extends Fragment{
                             }else{
                                 metaAux.dineroActual -= tran.cantidad;
                             }
+
+                            if(metaAux.dineroActual == metaAux.dineroObjetivo)
+                            {
+                                metaAux.logrado = true;
+                            }
+
                             editMeta(metaAux);
+                            meta = metaAux;
+                            comprobarMetaCompletada();
                         }
                     });
                 }catch(Exception e){

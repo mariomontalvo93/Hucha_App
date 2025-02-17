@@ -39,6 +39,7 @@
     <string name="eliminar">Eliminate</string>
     <string name="title_eliminar_meta">Eliminate goal</string>
     <string name="aviso_eliminar">You are going to delete a goal, are you sure?</string>
+    <string name="aviso_reiniciar_datos">Are you sure you want to reset your data? All progress and goals created so far will be lost</string>
     <string name="rellenar_campo_nombre">You must fill out the name field</string>
     <string name="faltan_campos_rellenar">There are missing fields to fill out</string>
     <string name="rellenar_campo_cantidad_inicial">You must fill in the goal price</string>
@@ -46,6 +47,7 @@
     <string name="default_web_client">646291813216-88mlptltu6086risai1h5j8mf98khlro.apps.googleusercontent.com</string>
     <string name="cerrar_sesion">Sign out</string>
     <string name="cierre_sesion_correcto">Logged out successfully</string>
+    <string name="aviso_eliminar_cuenta">Are you sure you want to delete your account? All data will be lost</string>
     <string name="anadir_meta">Add goal</string>
     <string name="no_metas">No goals available.\nPress the button to add a new goal</string>
     <string name="sin_concepto">No concept</string>
@@ -66,6 +68,11 @@
     <string name="password_minuscula_mayuscula">The password must contain at least one uppercase and one lowercase letter</string>
     <string name="password_caracter_especial">The password must contain a special character</string>
     <string name="error_crear_cuenta">Error creating account</string>
-    <string name="eliminar_datos_correcto">Los datos se han eliminado correctamente.</string>
-    <string name="eliminar_datos_error">Ha habido un error al eliminar los datos. Inténtelo más tarde.</string>
+    <string name="eliminar_datos_correcto">The data has been successfully deleted</string>
+    <string name="eliminar_datos_error">There was an error deleting data. Try again later</string>
+    <string name="atencion">Atención</string>
+    <string name="cantidad_superior_0">La cantidad de la meta debe ser superior a 0.</string>
+    <string name="aviso_cantidad_actual_superior">La cantidad introducida sobrepasa el valor total de la meta. Introduzca una transacción válida.</string>
+    <string name="aviso_cantidad_actual_menor_0">Con la cantidad introducida, el ahorro de la meta quedaría por debajo de 0. Introduzca una cantidad válida.</string>
+    <string name="color">Color</string>
 </resources>
