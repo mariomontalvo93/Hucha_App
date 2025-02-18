@@ -67,6 +67,28 @@
         app:layout_constraintTop_toBottomOf="@+id/etCantidadCrearMeta"
         android:layout_marginTop="20dp"/>
 
+    <TextView
+        android:id="@+id/tvColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:ems="10"
+        android:text="@string/color"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etCantidadInicialMeta" />
+
+    <Button
+        android:id="@+id/btnColor"
+        android:layout_width="30dp"
+        android:layout_height="40dp"
+        android:backgroundTint="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvColor"
+        app:layout_constraintBottom_toBottomOf="@+id/tvColor"/>
+
     <Button
         android:id="@+id/btnCrearMeta"
         android:layout_width="wrap_content"
@@ -75,6 +97,39 @@
         android:text="@string/title_crear_meta"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etCantidadInicialMeta" />
+        app:layout_constraintTop_toBottomOf="@+id/tvIconoMeta" />
+
+    <ImageView
+        android:id="@+id/ivAtrasCrearMeta"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_atras"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"/>
+
+    <TextView
+        android:id="@+id/tvIconoMeta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/icono"
+        android:layout_marginTop="35dp"
+        android:textSize="18sp"
+        android:ems="10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvColor"/>
+
+    <ImageView
+        android:id="@+id/ivIconoMeta"
+        android:src="@drawable/ic_no_image"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvIconoMeta"
+        app:layout_constraintBottom_toBottomOf="@+id/tvIconoMeta" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

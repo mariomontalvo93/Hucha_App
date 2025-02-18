@@ -66,12 +66,14 @@
     <string name="password_contener_numero">La contraseña debe contener un número.</string>
     <string name="password_minuscula_mayuscula">La contraseña debe contener al menos una mayúscula y una minúscula.</string>
     <string name="password_caracter_especial">La contraseña debe contener un caracter especial.</string>
-    <string name="error_crear_cuenta">Error al crear cuenta</string>
+    <string name="error_crear_cuenta">Error al crear cuenta.</string>
     <string name="eliminar_datos_correcto">Los datos se han eliminado correctamente.</string>
     <string name="eliminar_datos_error">Ha habido un error al eliminar los datos. Inténtelo más tarde.</string>
     <string name="atencion">Atención</string>
     <string name="cantidad_superior_0">La cantidad de la meta debe ser superior a 0.</string>
     <string name="aviso_cantidad_actual_superior">La cantidad introducida sobrepasa el valor total de la meta. Introduzca una transacción válida.</string>
     <string name="aviso_cantidad_actual_menor_0">Con la cantidad introducida, el ahorro de la meta quedaría por debajo de 0. Introduzca una cantidad válida.</string>
-    <string name="color">Color</string>
+    <string name="color">Color:</string>
+    <string name="icono">Icono:</string>
+    <string name="seleccionar_imagen">Seleccionar imagen</string>
 </resources>

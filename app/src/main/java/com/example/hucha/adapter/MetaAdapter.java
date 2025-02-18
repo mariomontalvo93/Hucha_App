@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hucha.BBDD.Modelo.Meta;
@@ -39,6 +40,7 @@ public class MetaAdapter extends RecyclerView.Adapter<MetaAdapter.ViewHolder> {
 
         public ImageView ivCompletada;
         public OnClickItem onClickItem;
+        public ImageView ivIcono;
 
         public ConstraintLayout cl;
         public ProgressBar pb;
@@ -51,6 +53,7 @@ public class MetaAdapter extends RecyclerView.Adapter<MetaAdapter.ViewHolder> {
             ivCompletada = itemView.findViewById(R.id.ivMetaCompletadaMetaItem);
             cl = itemView.findViewById(R.id.cvMetaItem);
             pb = itemView.findViewById(R.id.pbMetaItem);
+            ivIcono = itemView.findViewById(R.id.ivMetaItem);
 
             onClickItem = clickItem;
 
@@ -80,7 +83,14 @@ public class MetaAdapter extends RecyclerView.Adapter<MetaAdapter.ViewHolder> {
         holder.tvTitle.setText(meta.nombre);
         holder.tvCantidad.setText(meta.dineroActual + "€/" + meta.dineroObjetivo );
 
-        Bitmap bm = BitmapFactory.decodeByteArray(meta.icono, 0 ,meta.icono.length);
+        Context context = holder.itemView.getContext();
+
+        if(meta.icono != null) {
+            Bitmap bm = BitmapFactory.decodeByteArray(meta.icono, 0, meta.icono.length);
+            holder.ivIcono.setImageBitmap(bm);
+        }else{
+            holder.ivIcono.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_no_image));
+        }
 
         holder.cl.setBackgroundColor(Color.parseColor(meta.color));
 

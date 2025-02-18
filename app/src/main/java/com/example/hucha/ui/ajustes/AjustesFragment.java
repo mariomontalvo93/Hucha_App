@@ -31,7 +31,12 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 
 public class AjustesFragment extends Fragment {
 
@@ -156,7 +161,14 @@ public class AjustesFragment extends Fragment {
             row.createCell(2).setCellValue(transaccion.tipoTransaccion);
             row.createCell(3).setCellValue(transaccion.cantidad);
             row.createCell(4).setCellValue(transaccion.concepto != null ? transaccion.concepto : "");
-            row.createCell(5).setCellValue(transaccion.fecha);
+
+            Instant instant = Instant.ofEpochMilli(transaccion.fecha);
+            LocalDateTime localDateTime = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd 'de' MMMM 'del' yyyy HH:mm", new Locale("es", "ES"));
+
+            String formattedDate = localDateTime.format(formatter);
+            row.createCell(5).setCellValue(formattedDate);
         }
     }
 

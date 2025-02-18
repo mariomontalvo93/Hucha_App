@@ -34,7 +34,7 @@
             android:layout_marginLeft="15dp"
             android:text="1 de enero 2025 13:30"
             android:layout_marginTop="10dp"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSecondary"
             app:layout_constraintStart_toEndOf="@+id/ivTipoTransaccion"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -45,7 +45,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginBottom="10dp"
             android:text="Sin concepto"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSecondary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/ivTipoTransaccion" />
 
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
             android:text="+50€"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSecondary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

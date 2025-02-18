@@ -12,7 +12,7 @@ import java.util.List;
 
 @Dao
 public interface MetaDao {
-    @Query("SELECT * FROM META WHERE idUsuario = :idUsuario")
+    @Query("SELECT * FROM META WHERE idUsuario = :idUsuario ORDER BY Logrado ASC")
     List<Meta> getMetasByUsuarioId(String idUsuario);
 
     @Query("SELECT COUNT(*) FROM META WHERE Logrado = 1 AND idUsuario = :idUsuario")

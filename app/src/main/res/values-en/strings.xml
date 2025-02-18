@@ -70,9 +70,11 @@
     <string name="error_crear_cuenta">Error creating account</string>
     <string name="eliminar_datos_correcto">The data has been successfully deleted</string>
     <string name="eliminar_datos_error">There was an error deleting data. Try again later</string>
-    <string name="atencion">Atención</string>
-    <string name="cantidad_superior_0">La cantidad de la meta debe ser superior a 0.</string>
-    <string name="aviso_cantidad_actual_superior">La cantidad introducida sobrepasa el valor total de la meta. Introduzca una transacción válida.</string>
-    <string name="aviso_cantidad_actual_menor_0">Con la cantidad introducida, el ahorro de la meta quedaría por debajo de 0. Introduzca una cantidad válida.</string>
+    <string name="atencion">Attention</string>
+    <string name="cantidad_superior_0">The goal amount must be greater than 0</string>
+    <string name="aviso_cantidad_actual_superior">The amount entered exceeds the total value of the goal. Please enter a valid transaction</string>
+    <string name="aviso_cantidad_actual_menor_0">With the amount entered, the goal savings would be below 0. Enter a valid amount</string>
     <string name="color">Color</string>
+    <string name="icono">Icono:</string>
+    <string name="seleccionar_imagen">Seleccionar imagen</string>
 </resources>

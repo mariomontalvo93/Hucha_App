@@ -13,6 +13,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -93,6 +94,15 @@ public class DetallesMetaFragment extends Fragment{
         ivEdit.setOnClickListener(v -> onClickEdit());
 
         binding.datosCabeceraDetalles.addView(cabecera);
+
+        binding.ivAtrasDetallesMeta.setOnClickListener(v->volverAtras());
+
+        if(meta.icono != null) {
+            Bitmap bm = BitmapFactory.decodeByteArray(meta.icono, 0, meta.icono.length);
+            ivImagen.setImageBitmap(bm);
+        }else{
+            ivImagen.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_no_image));
+        }
 
         if(transaccionesList == null) obtenerTransacciones();
         initRecyclerView();
@@ -180,8 +190,6 @@ public class DetallesMetaFragment extends Fragment{
                 }
             }
         }).start();
-
-
     }
 
     private void initRecyclerView()
@@ -398,5 +406,10 @@ public class DetallesMetaFragment extends Fragment{
         DetallesMetaFragmentDirections.ActionNavigationDetallesMetaToNavigationCrearMeta action = DetallesMetaFragmentDirections.actionNavigationDetallesMetaToNavigationCrearMeta(meta);
 
         Navigation.findNavController(binding.getRoot()).navigate(action);
+    }
+
+    private void volverAtras()
+    {
+        requireActivity().getSupportFragmentManager().popBackStack();
     }
 }
