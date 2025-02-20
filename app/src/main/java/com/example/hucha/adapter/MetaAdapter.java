@@ -10,16 +10,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.hucha.BBDD.Modelo.Meta;
 import com.example.hucha.R;
-
-import java.sql.SQLException;
 import java.util.List;
 
 public class MetaAdapter extends RecyclerView.Adapter<MetaAdapter.ViewHolder> {

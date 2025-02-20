@@ -76,4 +76,6 @@
     <string name="color">Color:</string>
     <string name="icono">Icono:</string>
     <string name="seleccionar_imagen">Seleccionar imagen</string>
+    <string name="info">Info</string>
+    <string name="trabajando_en_ello">Estamos trabajando en ello...</string>
 </resources>

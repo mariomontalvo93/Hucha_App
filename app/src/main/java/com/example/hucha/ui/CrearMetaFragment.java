@@ -14,18 +14,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import com.example.hucha.Auxiliar;
 import com.example.hucha.BBDD.Modelo.Meta;
 import com.example.hucha.R;
@@ -162,11 +158,11 @@ public class CrearMetaFragment extends Fragment {
         }
         else if(meta != null)
         {
-            if(imagenActual != null)
+            /*if(imagenActual != null)
             {
                 byte[] imageBytes = uriToBytes(getContext(), imagenActual);
                 meta.icono = imageBytes;
-            }
+            }*/
             meta.nombre = binding.etNombreMeta.getText().toString();
             meta.dineroActual = Float.parseFloat(binding.etCantidadInicialMeta.getText().toString());
             meta.dineroObjetivo = Float.parseFloat(binding.etCantidadCrearMeta.getText().toString());
@@ -182,18 +178,23 @@ public class CrearMetaFragment extends Fragment {
             SharedPreferences sharedPreferences = Auxiliar.getPreferenciasCompartidas(getContext());
             String usuario = sharedPreferences.getString("usuario", "");
 
+            Drawable dw= getResources().getDrawable(R.drawable.cerdito);
+            Bitmap bm = ((BitmapDrawable) dw).getBitmap();
 
-            byte[] imageBytes = null;
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            bm.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+            byte[] bytes = outputStream.toByteArray();
+
+            /*byte[] imageBytes = null;
             if(imagenActual != null)
             {
                 imageBytes = uriToBytes(getContext(), imagenActual);
-            }
-
+            }*/
 
             meta = new Meta(binding.etNombreMeta.getText().toString(),
                     Float.parseFloat(binding.etCantidadCrearMeta.getText().toString()),
                     Float.parseFloat(binding.etCantidadInicialMeta.getText().toString()),
-                    colorMeta, false, imageBytes, -1, false,usuario);
+                    colorMeta, false, bytes, -1, false,usuario);
 
 
             new Thread(new Runnable() {
@@ -285,7 +286,6 @@ public class CrearMetaFragment extends Fragment {
             values.put(MediaStore.Images.Media.TITLE, "Nueva Imagen");
             values.put(MediaStore.Images.Media.DESCRIPTION, "Desde la cámara");
             imagenActual = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-
             intent.putExtra(MediaStore.EXTRA_OUTPUT, imagenActual);
             startActivityForResult(intent, REQUEST_CAMERA);
         }

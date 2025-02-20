@@ -6,19 +6,24 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.pdf.PdfDocument;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Environment;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +47,8 @@ import com.example.hucha.databinding.FragmentDetallesMetaBinding;
 import com.example.hucha.ui.home.HomeFragmentDirections;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -56,7 +63,7 @@ public class DetallesMetaFragment extends Fragment{
 
     TextView tvTitle, tvCantidad;
     ImageView ivImagen;
-    ImageView ivDelete, ivEdit, ivCompletada;
+    ImageView ivCompletada;
     ConstraintLayout cl;
     ProgressBar pb;
 
@@ -80,8 +87,6 @@ public class DetallesMetaFragment extends Fragment{
         tvTitle = cabecera.findViewById(R.id.tvTitleMetaItem);
         tvCantidad = cabecera.findViewById(R.id.tvAmountItem);
         ivImagen = cabecera.findViewById(R.id.ivMetaItem);
-        ivDelete = cabecera.findViewById(R.id.btnActionDeleteMetaItem);
-        ivEdit = cabecera.findViewById(R.id.btnActionEditMetaItem);
         ivCompletada = cabecera.findViewById(R.id.ivMetaCompletadaMetaItem);
         cl = cabecera.findViewById(R.id.cvMetaItem);
         pb = cabecera.findViewById(R.id.pbMetaItem);
@@ -90,8 +95,9 @@ public class DetallesMetaFragment extends Fragment{
 
         comprobarMetaCompletada();
 
-        ivDelete.setOnClickListener(v -> onClickDelete());
-        ivEdit.setOnClickListener(v -> onClickEdit());
+        binding.btnActionDeleteDetalles.setOnClickListener(v -> onClickDelete());
+        binding.btnActionEditDetalles.setOnClickListener(v -> onClickEdit());
+        binding.ivImprimirInforme.setOnClickListener(v -> generarPdf());
 
         binding.datosCabeceraDetalles.addView(cabecera);
 
@@ -137,14 +143,14 @@ public class DetallesMetaFragment extends Fragment{
     {
         if(meta.logrado)
         {
-            ivDelete.setVisibility(View.GONE);
-            ivEdit.setVisibility(View.GONE);
+            binding.btnActionDeleteDetalles.setVisibility(View.GONE);
+            binding.btnActionEditDetalles.setVisibility(View.GONE);
             ivCompletada.setVisibility(View.VISIBLE);
             binding.btnAnadirRetirada.setVisibility(View.GONE);
             binding.btnAnadirIngreso.setVisibility(View.GONE);
         }else{
-            ivDelete.setVisibility(View.VISIBLE);
-            ivEdit.setVisibility(View.VISIBLE);
+            binding.btnActionDeleteDetalles.setVisibility(View.VISIBLE);
+            binding.btnActionEditDetalles.setVisibility(View.VISIBLE);
         }
     }
 
@@ -153,9 +159,12 @@ public class DetallesMetaFragment extends Fragment{
         tvTitle.setText(meta.nombre);
         tvCantidad.setText(meta.dineroActual + "€/" + meta.dineroObjetivo );
 
-        Bitmap bm = BitmapFactory.decodeByteArray(meta.icono, 0 ,meta.icono.length);
-
-        ivImagen.setImageBitmap(bm);
+        if(meta.icono != null) {
+            Bitmap bm = BitmapFactory.decodeByteArray(meta.icono, 0, meta.icono.length);
+            ivImagen.setImageBitmap(bm);
+        }else{
+            ivImagen.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_no_image));
+        }
 
         pb.setMax(Math.round(meta.dineroObjetivo));
         pb.setProgress(Math.round(meta.dineroActual));
@@ -411,5 +420,39 @@ public class DetallesMetaFragment extends Fragment{
     private void volverAtras()
     {
         requireActivity().getSupportFragmentManager().popBackStack();
+    }
+
+    private void generarPdf()
+    {
+        View view = binding.getRoot();
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        view.draw(canvas);
+
+        PdfDocument pdfDocument = new PdfDocument();
+        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(bitmap.getWidth(), bitmap.getHeight(), 1).create();
+        PdfDocument.Page page = pdfDocument.startPage(pageInfo);
+
+        Canvas pdfCanvas = page.getCanvas();
+        pdfCanvas.drawBitmap(bitmap, 0, 0, null);
+        pdfDocument.finishPage(page);
+
+        File file = new File(getContext().getExternalFilesDir(null), "detalles_"+meta.id+".pdf");
+
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            pdfDocument.writeTo(fos);
+            pdfDocument.close();
+            fos.close();
+
+            Uri uri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".provider", file);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(uri, "application/pdf");
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            getContext().startActivity(Intent.createChooser(intent, "Abrir archivo Pdf"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(view.getContext(), "Error al guardar el PDF", Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -136,7 +136,7 @@
             android:max="100"
             android:progress="75"
             android:layout_marginTop="10dp"
-            android:progressTint="@color/white"
+            android:progressTint="@color/black"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             app:layout_constraintEnd_toEndOf="parent"

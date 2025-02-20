@@ -58,7 +58,21 @@ public class AjustesFragment extends Fragment {
         binding.btnEliminarCuenta.setOnClickListener(v -> reiniciarUsuario());
         binding.btnExportarDatos.setOnClickListener(v -> exportarDatosAExcel());
 
+        binding.btnConfigPrivacidad.setOnClickListener(v -> ventanaEstamosTrabajandoEnEllo());
+
         return root;
+    }
+
+    private void ventanaEstamosTrabajandoEnEllo()
+    {
+        new AlertDialog.Builder(requireContext())
+                .setTitle(getResources().getString(R.string.info))
+                .setMessage(getResources().getString(R.string.trabajando_en_ello))
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setPositiveButton(getResources().getString(R.string.aceptar), (dialog, which) -> {
+                    dialog.cancel();
+                })
+                .show();
     }
 
     private void exportarDatosAExcel()

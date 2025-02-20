@@ -123,13 +123,13 @@
 
     <ImageView
         android:id="@+id/ivIconoMeta"
-        android:src="@drawable/ic_no_image"
-        android:layout_width="70dp"
+        android:layout_width="71dp"
         android:layout_height="70dp"
+        android:src="@drawable/ic_no_image"
+        app:layout_constraintBottom_toBottomOf="@+id/tvIconoMeta"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvIconoMeta"
-        app:layout_constraintBottom_toBottomOf="@+id/tvIconoMeta" />
+        app:layout_constraintTop_toTopOf="@+id/tvIconoMeta" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
