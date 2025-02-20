@@ -103,13 +103,6 @@ public class DetallesMetaFragment extends Fragment{
 
         binding.ivAtrasDetallesMeta.setOnClickListener(v->volverAtras());
 
-        if(meta.icono != null) {
-            Bitmap bm = BitmapFactory.decodeByteArray(meta.icono, 0, meta.icono.length);
-            ivImagen.setImageBitmap(bm);
-        }else{
-            ivImagen.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_no_image));
-        }
-
         if(transaccionesList == null) obtenerTransacciones();
         initRecyclerView();
 
@@ -159,11 +152,18 @@ public class DetallesMetaFragment extends Fragment{
         tvTitle.setText(meta.nombre);
         tvCantidad.setText(meta.dineroActual + "€/" + meta.dineroObjetivo );
 
-        if(meta.icono != null) {
-            Bitmap bm = BitmapFactory.decodeByteArray(meta.icono, 0, meta.icono.length);
-            ivImagen.setImageBitmap(bm);
-        }else{
-            ivImagen.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_no_image));
+        ivImagen.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_no_image));
+
+        if(meta.rutaIcono!=null) {
+            File imgFile = new File(meta.rutaIcono);
+            Bitmap bitmap = null;
+            if (imgFile.exists()) {
+                bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            }
+
+            if (bitmap != null) {
+                ivImagen.setImageBitmap(bitmap);
+            }
         }
 
         pb.setMax(Math.round(meta.dineroObjetivo));

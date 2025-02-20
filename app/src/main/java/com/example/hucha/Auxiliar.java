@@ -2,7 +2,9 @@ package com.example.hucha;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.widget.Toast;
 
 import androidx.room.Room;
@@ -10,6 +12,9 @@ import androidx.room.RoomDatabase;
 
 import com.example.hucha.BBDD.AppDataBase;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
@@ -61,5 +66,25 @@ public class Auxiliar {
     public static SharedPreferences getPreferenciasCompartidas(Context context)
     {
         return context.getSharedPreferences("user_preferences",Context.MODE_PRIVATE);
+    }
+
+    public static String guardarImagenEnAlmacenamientoExterno(Bitmap bitmap, Context context, long id) {
+        File directorio = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "HuchaApp");
+
+        if (!directorio.exists()) {
+            directorio.mkdirs();
+        }
+
+        String nombreArchivo = "IMG_" + id + ".jpg";
+        File archivoImagen = new File(directorio, nombreArchivo);
+
+        try (FileOutputStream fos = new FileOutputStream(archivoImagen)) {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+            fos.flush();
+            return archivoImagen.getAbsolutePath(); // Retornamos la ruta para guardarla en Room
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

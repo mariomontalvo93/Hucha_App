@@ -9,14 +9,22 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.ImageDecoder;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,9 +37,14 @@ import com.example.hucha.databinding.FragmentCrearMetaBinding;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class CrearMetaFragment extends Fragment {
 
@@ -45,7 +58,9 @@ public class CrearMetaFragment extends Fragment {
 
     private String colorMeta;
 
-    private Uri imagenActual = null;
+    private Bitmap imagenActual = null;
+
+    private Uri imagenCamara = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,9 +91,16 @@ public class CrearMetaFragment extends Fragment {
             binding.etCantidadInicialMeta.setEnabled(false);
             colorMeta = meta.color;
 
-            if(imagenActual != null)
-            {
-                binding.ivIconoMeta.setImageURI(imagenActual);
+            if(meta.rutaIcono!=null) {
+                File imgFile = new File(meta.rutaIcono);
+                Bitmap bitmap = null;
+                if (imgFile.exists()) {
+                    bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                }
+
+                if (bitmap != null) {
+                    binding.ivIconoMeta.setImageBitmap(bitmap);
+                }
             }
         }
 
@@ -158,11 +180,11 @@ public class CrearMetaFragment extends Fragment {
         }
         else if(meta != null)
         {
-            /*if(imagenActual != null)
+            if(imagenActual != null)
             {
-                byte[] imageBytes = uriToBytes(getContext(), imagenActual);
-                meta.icono = imageBytes;
-            }*/
+                String path = Auxiliar.guardarImagenEnAlmacenamientoExterno(imagenActual, getContext(), meta.id);
+                meta.rutaIcono = path;
+            }
             meta.nombre = binding.etNombreMeta.getText().toString();
             meta.dineroActual = Float.parseFloat(binding.etCantidadInicialMeta.getText().toString());
             meta.dineroObjetivo = Float.parseFloat(binding.etCantidadCrearMeta.getText().toString());
@@ -183,18 +205,11 @@ public class CrearMetaFragment extends Fragment {
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             bm.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-            byte[] bytes = outputStream.toByteArray();
-
-            /*byte[] imageBytes = null;
-            if(imagenActual != null)
-            {
-                imageBytes = uriToBytes(getContext(), imagenActual);
-            }*/
 
             meta = new Meta(binding.etNombreMeta.getText().toString(),
                     Float.parseFloat(binding.etCantidadCrearMeta.getText().toString()),
                     Float.parseFloat(binding.etCantidadInicialMeta.getText().toString()),
-                    colorMeta, false, bytes, -1, false,usuario);
+                    colorMeta, false, null, -1, false,usuario);
 
 
             new Thread(new Runnable() {
@@ -204,6 +219,13 @@ public class CrearMetaFragment extends Fragment {
                         long id = Auxiliar.getAppDataBaseInstance(getContext()).metaDao().inserMeta(meta);
 
                         meta.id = id;
+
+                        if(imagenActual != null)
+                        {
+                            String path = Auxiliar.guardarImagenEnAlmacenamientoExterno(imagenActual, getContext(), meta.id);
+                            meta.rutaIcono = path;
+                            Auxiliar.getAppDataBaseInstance(getContext()).metaDao().updateMeta(meta);
+                        }
 
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -278,16 +300,27 @@ public class CrearMetaFragment extends Fragment {
     }
 
     // Método para abrir la cámara
-    private void openCamera() {
+    private void openCamera(){
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
             // Crear un URI para la imagen
             ContentValues values = new ContentValues();
             values.put(MediaStore.Images.Media.TITLE, "Nueva Imagen");
             values.put(MediaStore.Images.Media.DESCRIPTION, "Desde la cámara");
-            imagenActual = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, imagenActual);
-            startActivityForResult(intent, REQUEST_CAMERA);
+
+            File fotoArchivo = null;
+
+            try {
+                fotoArchivo = crearArchivoImagen();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+            if (fotoArchivo != null) {
+                imagenCamara = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".provider", fotoArchivo);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imagenCamara);
+                startActivityForResult(intent, REQUEST_CAMERA);
+            }
         }
     }
 
@@ -305,34 +338,49 @@ public class CrearMetaFragment extends Fragment {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_CAMERA) {
                 // Mostrar la imagen capturada
-                binding.ivIconoMeta.setImageURI(imagenActual);
+                try {
+                    imagenActual = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(),imagenCamara);
+                    imagenActual = corregirOrientacion(imagenActual, new File(imagenCamara.getPath()).getPath());
+                    binding.ivIconoMeta.setImageBitmap(imagenActual);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
             } else if (requestCode == REQUEST_GALLERY && data != null) {
                 // Obtener la imagen de la galería
-                imagenActual = data.getData();
-                binding.ivIconoMeta.setImageURI(imagenActual);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    try {
+                        imagenActual = ImageDecoder.decodeBitmap(ImageDecoder.createSource(getContext().getContentResolver(), data.getData()));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                binding.ivIconoMeta.setImageBitmap(imagenActual);
             }
         }
     }
 
-    public static byte[] uriToBytes(Context context, Uri uri) {
-        try {
-            ContentResolver contentResolver = context.getContentResolver();
-            InputStream inputStream = contentResolver.openInputStream(uri);
-            if (inputStream == null) return null;
+    private File crearArchivoImagen() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String nombreArchivo = "IMG_" + timeStamp;
+        File directorio = getContext().getExternalFilesDir(null);
 
-            ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                byteBuffer.write(buffer, 0, bytesRead);
+        return File.createTempFile(nombreArchivo, ".jpg", directorio);
+    }
+
+    private Bitmap corregirOrientacion(Bitmap bitmap, String rutaImagen) {
+        try {
+            int angulo = 90;
+
+            if (angulo != 0) {
+                Matrix matrix = new Matrix();
+                matrix.postRotate(angulo);
+                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
             }
-            inputStream.close();
-            return byteBuffer.toByteArray();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        }catch (Exception e) {
-            throw new RuntimeException(e);
         }
-        return null;
+
+        return bitmap;
     }
 }

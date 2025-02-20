@@ -35,7 +35,7 @@ public class Meta implements Serializable {
     public boolean logrado;
 
     @ColumnInfo(name = "icono")
-    public byte[] icono;
+    public String rutaIcono;
 
     @ColumnInfo(name = "iconoGenerico")
     public int iconoGenerico;
@@ -48,13 +48,13 @@ public class Meta implements Serializable {
     @NotNull
     public String idUsuario;
 
-    public Meta(String nombre, float dineroObjetivo, float dineroActual, String color, boolean logrado, byte[] icono, int iconoGenerico, boolean online, String idUsuario) {
+    public Meta(String nombre, float dineroObjetivo, float dineroActual, String color, boolean logrado, String rutaIcono, int iconoGenerico, boolean online, String idUsuario) {
         this.nombre = nombre;
         this.dineroObjetivo = dineroObjetivo;
         this.dineroActual = dineroActual;
         this.color = color;
         this.logrado = logrado;
-        this.icono = icono;
+        this.rutaIcono = rutaIcono;
         this.iconoGenerico = iconoGenerico;
         this.online = online;
         this.idUsuario = idUsuario;

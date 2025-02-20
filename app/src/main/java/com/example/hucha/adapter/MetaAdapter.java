@@ -16,6 +16,8 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.hucha.BBDD.Modelo.Meta;
 import com.example.hucha.R;
+
+import java.io.File;
 import java.util.List;
 
 public class MetaAdapter extends RecyclerView.Adapter<MetaAdapter.ViewHolder> {
@@ -80,12 +82,18 @@ public class MetaAdapter extends RecyclerView.Adapter<MetaAdapter.ViewHolder> {
         holder.tvCantidad.setText(meta.dineroActual + "€/" + meta.dineroObjetivo );
 
         Context context = holder.itemView.getContext();
+        holder.ivIcono.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_no_image));
 
-        if(meta.icono != null) {
-            Bitmap bm = BitmapFactory.decodeByteArray(meta.icono, 0, meta.icono.length);
-            holder.ivIcono.setImageBitmap(bm);
-        }else{
-            holder.ivIcono.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_no_image));
+        if(meta.rutaIcono!=null) {
+            File imgFile = new File(meta.rutaIcono);
+            Bitmap bitmap = null;
+            if (imgFile.exists()) {
+                bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            }
+
+            if (bitmap != null) {
+                holder.ivIcono.setImageBitmap(bitmap);
+            }
         }
 
         holder.cl.setBackgroundColor(Color.parseColor(meta.color));
